@@ -3,6 +3,7 @@ package com.katyshev.webZakat.controllers;
 import com.katyshev.webZakat.exceptions.PositionIndexOfBound;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;
+import com.katyshev.webZakat.services.OrderItemService;
 import com.katyshev.webZakat.services.PriceItemService;
 import com.katyshev.webZakat.services.UnikoLecItemService;
 import com.katyshev.webZakat.utils.Engine;
@@ -21,12 +22,17 @@ import java.util.List;
 public class ZakazController {
     private final UnikoLecItemService unikoLecItemService;
     private final PriceItemService priceItemService;
+    private final OrderItemService orderItemService;
     private final Engine engine;
 
     @Autowired
-    public ZakazController(UnikoLecItemService unikoLecItemService, PriceItemService priceItemService, Engine engine) {
+    public ZakazController(UnikoLecItemService unikoLecItemService,
+                           PriceItemService priceItemService,
+                           OrderItemService orderItemService,
+                           Engine engine) {
         this.unikoLecItemService = unikoLecItemService;
         this.priceItemService = priceItemService;
+        this.orderItemService = orderItemService;
         this.engine = engine;
     }
 
@@ -110,7 +116,17 @@ public class ZakazController {
                              @RequestParam(value = "prog_req", required = false, defaultValue = "") String progRequest,
                              @RequestParam(value = "count", required = false, defaultValue = "0") String countStr) {
 
-        int positionNumber = Integer.parseInt(position);
+        int positionNumber = 0;
+        int priceId = 0 ;
+        int count = 0;
+
+        try{
+            positionNumber = Integer.parseInt(position);
+            priceId = Integer.parseInt(id);
+            count = Integer.parseInt(countStr);
+        } catch (NumberFormatException e) {
+            // ignore WARNING!!!
+        }
 
         UnikoLecItem unikoItem;
         try {
@@ -121,8 +137,12 @@ public class ZakazController {
         }
 
         List<PriceItem> list = engine.getPriceListForString(progRequest);
-        priceItemService.setInOrder(Integer.parseInt(id), Integer.parseInt(countStr));
+
+        priceItemService.setInOrder(priceId, count);
+        orderItemService.save(priceId, count);
+
         System.out.println(countStr + "====" + id);
+
 
         model.addAttribute("position", unikoItem.getId());
         model.addAttribute("name", unikoItem.getName());
