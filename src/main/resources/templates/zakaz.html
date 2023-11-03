@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>...</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+
+</head>
+<body>
+<h2>Web Zakat</h2>
+
+<div id="insert_menu"></div>
+
+<h3 th:text="${name}"></h3>
+<a th:href="@{/zakaz/previous?position={ident}(ident=${position})}">Предыдущий</a>
+<a th:href="@{/zakaz/next?position={ident}(ident=${position})}">Следующий</a>
+<form align="right" action="/zakaz/user_request">
+    <input type="text" name="user_req" th:value="${prog_req}"/>
+    <input type="hidden" name="position" th:value="${position}"/>
+    <input type="submit" value="Сохранить" class="search_button">
+</form>
+<form align="right" action="/zakaz/user_request">
+    <input type="text" name="user_req" th:value="${user_req}"/>
+    <input type="hidden" name="position" th:value="${position}"/>
+    <input type="submit" value="Поиск" class="search_button">
+</form>
+<hr>
+<table th:if="${not list.isEmpty}" border="1">
+    <tr>
+        <th>Наименование</th>
+        <th>Производитель</th>
+        <th width="50">НДС</th>
+        <th width="100">Цена</th>
+        <th>В заявке</th>
+    </tr>
+
+    <tr th:each="item : ${list}">
+        <td th:text="${item.getName()}"></td>
+        <td th:text="${item.getManufacturer()}"></td>
+        <td th:text="${item.getNds()}"></td>
+        <td th:text="${item.getPrice()}"></td>
+        <td>
+            <form action="/zakaz/user_add">
+                <input type="text" name="count" th:value="${item.getInOrder()}" size="5"/>
+                <input type="hidden" name="position" th:value="${position}"/>
+                <input type="hidden" name="id" th:value="${item.getId()}"/>
+                <input type="hidden" name="prog_req" th:value="${prog_req}"/>
+                <input type="submit" value="Добавить">
+            </form>
+        </td>
+    </tr>
+</table>
+
+<script>
+    fetch('/menuButtons.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('insert_menu').innerHTML = data;
+        });
+</script>
+</body>
+</html>

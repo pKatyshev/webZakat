@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+</head>
+<body>
+<h2>Web Zakat</h2>
+<div id="insert_menu"></div>
+
+<br>
+<table th:if="${not list.isEmpty}" border="1">
+    <tr>
+        <th>Наименование</th>
+        <th>Кол-во</th>
+    </tr>
+    <tr th:each="item : ${list}">
+        <td th:text="${item.getName()}"></td>
+        <td th:text="${item.getQuantity()}"></td>
+        <td>
+            <a th:href="@{/delete_item?id={ident}(ident=${item.getId()})}">Удалить</a>
+        </td>
+    </tr>
+</table>
+
+<script>
+    fetch('menuButtons.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('insert_menu').innerHTML = data;
+        });
+</script>
+</body>
+</html>
