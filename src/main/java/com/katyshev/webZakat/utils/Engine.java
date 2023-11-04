@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class Engine {
@@ -45,13 +47,13 @@ public class Engine {
     }
 
     public List<PriceItem> getPriceListForString(String searchQuery) {
+        long start = new Date().getTime();
+
         String[] arr = searchQuery.split(" ");
         List<PriceItem> priceItems = priceItemService.findAll();
         List<PriceItem> response = new ArrayList<>();
 
         System.out.println("search for: " + searchQuery);
-
-        long start = new Date().getTime();
 
         for (PriceItem priceItem : priceItems) {
             boolean found = false;
@@ -71,10 +73,17 @@ public class Engine {
 
         System.out.println(response.size() + " was found for " + (stop-start) + "ms");
 
-        return response;
+        return sortByPriceAndId(response);
     }
 
     public String getProgramRequest(String name) {
         return wordsWorker.generateSearchQuery(name);
+    }
+
+    private List<PriceItem> sortByPriceAndId(List<PriceItem> list) {
+        return list.stream()
+                .sorted(
+                        Comparator.comparing(PriceItem::getPrice).thenComparing(PriceItem::getCodePst)
+                ).collect(Collectors.toList());
     }
 }
