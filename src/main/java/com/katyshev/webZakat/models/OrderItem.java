@@ -2,6 +2,8 @@ package com.katyshev.webZakat.models;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "order_item")
 public class OrderItem {
@@ -27,6 +29,9 @@ public class OrderItem {
 
     @Column(name = "distributor")
     private String distributor;
+
+    @Column(name ="price_item_id")
+    private int priceItemId;
 
     public OrderItem() {
     }
@@ -85,5 +90,26 @@ public class OrderItem {
 
     public void setDistributor(String distributor) {
         this.distributor = distributor;
+    }
+
+    public int getPriceItemId() {
+        return priceItemId;
+    }
+
+    public void setPriceItemId(int priceItemId) {
+        this.priceItemId = priceItemId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return id == orderItem.id && orderNumber == orderItem.orderNumber && Double.compare(orderItem.price, price) == 0 && quantity == orderItem.quantity && priceItemId == orderItem.priceItemId && Objects.equals(name, orderItem.name) && Objects.equals(manufacturer, orderItem.manufacturer) && Objects.equals(distributor, orderItem.distributor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderNumber, name, manufacturer, price, quantity, distributor, priceItemId);
     }
 }

@@ -42,20 +42,14 @@ public class ZakazController {
         int positionNumber = Integer.parseInt(position);
         ++positionNumber;
 
-        UnikoLecItem unikoItem = null;
+        UnikoLecItem unikoItem;
         try {
             unikoItem = unikoLecItemService.findById(positionNumber);
         } catch (PositionIndexOfBound e) {
             positionNumber = 1;
             unikoItem = unikoLecItemService.findById(positionNumber);
         }
-        List<PriceItem> list = engine.getPriceListForUnikoItem(unikoItem);
-
-        model.addAttribute("position", unikoItem.getId());
-        model.addAttribute("name", unikoItem.getName());
-        model.addAttribute("list", list);
-        model.addAttribute("prog_req", engine.getProgramRequest(unikoItem.getName()));
-        return "zakaz";
+        return enrichModel(model, unikoItem);
     }
 
     @GetMapping("/previous")
@@ -71,6 +65,10 @@ public class ZakazController {
             positionNumber = 1;
             unikoItem = unikoLecItemService.findById(positionNumber);
         }
+        return enrichModel(model, unikoItem);
+    }
+
+    private String enrichModel(Model model, UnikoLecItem unikoItem) {
         List<PriceItem> list = engine.getPriceListForUnikoItem(unikoItem);
 
         model.addAttribute("position", unikoItem.getId());
@@ -116,17 +114,9 @@ public class ZakazController {
                              @RequestParam(value = "prog_req", required = false, defaultValue = "") String progRequest,
                              @RequestParam(value = "count", required = false, defaultValue = "0") String countStr) {
 
-        int positionNumber = 0;
-        int priceId = 0 ;
-        int count = 0;
-
-        try{
-            positionNumber = Integer.parseInt(position);
-            priceId = Integer.parseInt(id);
-            count = Integer.parseInt(countStr);
-        } catch (NumberFormatException e) {
-            // ignore WARNING!!!
-        }
+        int positionNumber = Integer.parseInt(position);
+        int priceItemId = Integer.parseInt(id);
+        int count = Integer.parseInt(countStr);
 
         UnikoLecItem unikoItem;
         try {
@@ -138,11 +128,13 @@ public class ZakazController {
 
         List<PriceItem> list = engine.getPriceListForString(progRequest);
 
-        priceItemService.setInOrder(priceId, count);
-        orderItemService.save(priceId, count);
+        if (count <= 0) {
+            orderItemService.delete(priceItemId);
+        } else {
+            orderItemService.save(priceItemId, count);
+        }
 
-        System.out.println(countStr + "====" + id);
-
+        priceItemService.setInOrder(priceItemId, count);
 
         model.addAttribute("position", unikoItem.getId());
         model.addAttribute("name", unikoItem.getName());

@@ -24,8 +24,8 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void save(int price_id, int quantity) {
-        PriceItem priceItem = priceItemRepository.findById(price_id).get();
+    public void save(int price_item_id, int quantity) {
+        PriceItem priceItem = priceItemRepository.findById(price_item_id).get();
         OrderItem orderItem = new OrderItem();
 
         orderItem.setName(priceItem.getName());
@@ -33,7 +33,12 @@ public class OrderItemService {
         orderItem.setPrice(priceItem.getPrice());
         orderItem.setQuantity(quantity);
         orderItem.setDistributor(priceItem.getDist());
+        orderItem.setPriceItemId(price_item_id);
 
         orderItemRepository.save(orderItem);
+    }
+
+    public void delete(int priceItemId) {
+        orderItemRepository.deleteByPriceItemId(priceItemId);
     }
 }
