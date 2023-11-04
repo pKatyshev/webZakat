@@ -34,6 +34,7 @@
         <th>Производитель</th>
         <th>Поставщик</th>
         <th width="50">НДС</th>
+        <th>Остаток</th>
         <th width="100">Цена</th>
         <th>В заявке</th>
     </tr>
@@ -43,6 +44,7 @@
         <td th:text="${item.getManufacturer()}"></td>
         <td th:text="${item.getDist()}"></td>
         <td th:text="${item.getNds()}"></td>
+        <td th:text="${item.getQuantity()}"></td>
         <td th:text="${item.getPrice()}"></td>
         <td>
             <form action="/zakaz/user_add">

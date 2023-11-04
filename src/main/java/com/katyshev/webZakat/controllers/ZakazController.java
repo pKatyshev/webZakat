@@ -116,7 +116,19 @@ public class ZakazController {
 
         int positionNumber = Integer.parseInt(position);
         int priceItemId = Integer.parseInt(id);
-        int count = Integer.parseInt(countStr);
+        int count;
+
+        try{
+            count = Integer.parseInt(countStr);
+        } catch (NumberFormatException e) {
+            count = 0;
+        }
+
+        if (count <= 0) {
+            orderItemService.delete(priceItemId);
+        } else orderItemService.save(priceItemId, count);
+
+        priceItemService.setInOrder(priceItemId, count);
 
         UnikoLecItem unikoItem;
         try {
@@ -127,14 +139,6 @@ public class ZakazController {
         }
 
         List<PriceItem> list = engine.getPriceListForString(progRequest);
-
-        if (count <= 0) {
-            orderItemService.delete(priceItemId);
-        } else {
-            orderItemService.save(priceItemId, count);
-        }
-
-        priceItemService.setInOrder(priceItemId, count);
 
         model.addAttribute("position", unikoItem.getId());
         model.addAttribute("name", unikoItem.getName());

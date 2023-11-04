@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,7 @@ public class OrderItemService {
     @Transactional
     public void save(int price_item_id, int quantity) {
         PriceItem priceItem = priceItemRepository.findById(price_item_id).get();
+        List<OrderItem> alreadyInOrderList = orderItemRepository.findAll();
         OrderItem orderItem = new OrderItem();
 
         orderItem.setName(priceItem.getName());
@@ -34,6 +36,15 @@ public class OrderItemService {
         orderItem.setQuantity(quantity);
         orderItem.setDistributor(priceItem.getDist());
         orderItem.setPriceItemId(price_item_id);
+
+        for (OrderItem already : alreadyInOrderList) {
+            if (already.getPriceItemId() == orderItem.getPriceItemId()) {
+                if (already.getQuantity() != quantity) {
+                    orderItemRepository.findById(already.getId()).setQuantity(quantity);
+                }
+                return;
+            }
+        }
 
         orderItemRepository.save(orderItem);
     }
