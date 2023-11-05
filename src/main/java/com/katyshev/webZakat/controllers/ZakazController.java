@@ -116,18 +116,9 @@ public class ZakazController {
 
         int positionNumber = Integer.parseInt(position);
         int priceItemId = Integer.parseInt(id);
-        int count;
+        int count = priceItemService.validateCount(priceItemId, countStr);
 
-        try{
-            count = Integer.parseInt(countStr);
-        } catch (NumberFormatException e) {
-            count = 0;
-        }
-
-        if (count <= 0) {
-            orderItemService.delete(priceItemId);
-        } else orderItemService.save(priceItemId, count);
-
+        orderItemService.save(priceItemId, count);
         priceItemService.setInOrder(priceItemId, count);
 
         UnikoLecItem unikoItem;

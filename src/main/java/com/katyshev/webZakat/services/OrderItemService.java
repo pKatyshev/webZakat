@@ -26,6 +26,12 @@ public class OrderItemService {
 
     @Transactional
     public void save(int price_item_id, int quantity) {
+
+        if (quantity <= 0) {
+            delete(price_item_id);
+            return;
+        }
+
         PriceItem priceItem = priceItemRepository.findById(price_item_id).get();
         List<OrderItem> alreadyInOrderList = orderItemRepository.findAll();
         OrderItem orderItem = new OrderItem();
