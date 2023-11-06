@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +29,11 @@ public class PriceItemService {
 
     public List<PriceItem> findAll(int page, int itemsPerPage) {
         return priceItemRepository.findAll(PageRequest.of(page, itemsPerPage)).getContent();
+    }
+
+    public PriceItem getById (int id) {
+        Optional<PriceItem> priceItemOptional = priceItemRepository.findById(id);
+        return priceItemOptional.orElseGet(PriceItem::new);
     }
 
     public List<PriceItem> findAllPerPage(String page, String itemsPerPage) {
@@ -60,5 +66,21 @@ public class PriceItemService {
     public void setInOrder(int id, int count) {
         PriceItem priceItem = priceItemRepository.findById(id).get();
         priceItem.setInOrder(count);
+    }
+
+    public int validateCount(int priceItemId, String countString) {
+        PriceItem priceItem = getById(priceItemId);
+        int balance = priceItem.getQuantity();
+        int count;
+
+        try {
+            count = Integer.parseInt(countString);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+
+        if (balance < count) {
+            return balance;
+        } else return Math.max(count, 0);
     }
 }
