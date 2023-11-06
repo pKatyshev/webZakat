@@ -1,6 +1,7 @@
 package com.katyshev.webZakat.services;
 
 import com.katyshev.webZakat.exceptions.PositionIndexOfBound;
+import com.katyshev.webZakat.exceptions.UnikoItemListIsEmptyException;
 import com.katyshev.webZakat.models.UnikoLecItem;
 import com.katyshev.webZakat.repositories.UnikoLecItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,22 @@ public class UnikoLecItemService {
         } else {
             throw new PositionIndexOfBound();
         }
+    }
+
+    public UnikoLecItem findNextById(int id) {
+        Optional<Integer> optional = unikoLecItemRepository.getMaxId();
+        if (optional.isEmpty()) throw new UnikoItemListIsEmptyException();
+
+        int maxId = optional.get();
+
+        if (id > maxId) id = 1;
+
+        Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
+
+        while (unikoItem.isEmpty()) {
+            unikoItem = unikoLecItemRepository.findById(++id);
+        }
+
+        return unikoItem.get();
     }
 }

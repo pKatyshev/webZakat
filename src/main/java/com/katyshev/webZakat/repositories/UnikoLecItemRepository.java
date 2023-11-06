@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UnikoLecItemRepository extends JpaRepository<UnikoLecItem, Integer> {
 
@@ -19,4 +21,7 @@ public interface UnikoLecItemRepository extends JpaRepository<UnikoLecItem, Inte
     @Transactional
     @Query(value = "ALTER SEQUENCE uniko_lec_item_id_seq RESTART WITH 1", nativeQuery = true)
     void restartSequence();
+
+    @Query(value = "SELECT MAX(id) FROM uniko_lec_item", nativeQuery = true)
+    Optional<Integer> getMaxId();
 }
