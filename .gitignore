@@ -34,3 +34,4 @@ build/
 /dockerfile
 /mvnw
 /mvnw.cmd
+/src/main/resources/zakat_db_init.sql

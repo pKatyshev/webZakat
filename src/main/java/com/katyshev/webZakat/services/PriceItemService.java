@@ -1,10 +1,10 @@
 package com.katyshev.webZakat.services;
 
 import com.katyshev.webZakat.models.PriceItem;
+import com.katyshev.webZakat.repositories.CustomPriceItemRepository;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +17,12 @@ import java.util.Optional;
 public class PriceItemService {
 
     private final PriceItemRepository priceItemRepository;
+    private final CustomPriceItemRepository customPriceItemRepository;
 
     @Autowired
-    public PriceItemService(PriceItemRepository priceItemRepository) {
+    public PriceItemService(PriceItemRepository priceItemRepository, CustomPriceItemRepository customPriceItemRepository) {
         this.priceItemRepository = priceItemRepository;
+        this.customPriceItemRepository = customPriceItemRepository;
     }
 
     public List<PriceItem> findAll() {
@@ -82,5 +84,9 @@ public class PriceItemService {
         if (balance < count) {
             return balance;
         } else return Math.max(count, 0);
+    }
+
+    public List<PriceItem> findAllByQuery(String query) {
+        return customPriceItemRepository.findAllByQuery(query);
     }
 }

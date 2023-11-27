@@ -221,4 +221,8 @@ public class WordsWorker {
 
         return dose;
     }
+
+    public String distinct(String request) {
+        return Arrays.stream(request.split(" ")).distinct().collect(Collectors.joining(" "));
+    }
 }

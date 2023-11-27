@@ -2,16 +2,14 @@ package com.katyshev.webZakat.utils;
 
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;
+import com.katyshev.webZakat.repositories.CustomPriceItemRepository;
 import com.katyshev.webZakat.services.PriceItemService;
 import com.katyshev.webZakat.services.UnikoLecItemService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -40,20 +38,12 @@ public class Engine {
         System.out.println("Engine: PRICES imported successfully");
     }
 
-    public List<PriceItem> getPriceListForUnikoItem(UnikoLecItem unikoItem) {
-        String searchQuery = wordsWorker.generateSearchQuery(unikoItem.getName());
-        List<PriceItem> response = getPriceListForString(searchQuery);
-        return response;
-    }
-
+    @Deprecated
     public List<PriceItem> getPriceListForString(String searchQuery) {
-        long start = new Date().getTime();
 
         String[] arr = searchQuery.split(" ");
         List<PriceItem> priceItems = priceItemService.findAll();
         List<PriceItem> response = new ArrayList<>();
-
-        System.out.println("search for: " + searchQuery);
 
         for (PriceItem priceItem : priceItems) {
             boolean found = false;
@@ -69,9 +59,6 @@ public class Engine {
                 response.add(priceItem);
             }
         }
-        long stop = new Date().getTime();
-
-        System.out.println(response.size() + " was found for " + (stop-start) + "ms");
 
         return sortByPriceAndId(response);
     }
@@ -85,5 +72,10 @@ public class Engine {
                 .sorted(
                         Comparator.comparing(PriceItem::getPrice).thenComparing(PriceItem::getCodePst)
                 ).collect(Collectors.toList());
+    }
+
+    public List<PriceItem> getPriceListForStringCustom(String request) {
+        String lowerCase = request.toLowerCase(Locale.ROOT);
+        return priceItemService.findAllByQuery(wordsWorker.distinct(lowerCase));
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -51,7 +52,18 @@ public class ZakazController {
             return "zakaz";
         }
 
-        return enrichModel(model, unikoItem);
+        String programRequest = engine.getProgramRequest(unikoItem.getName());
+        long start = new Date().getTime();
+//        List<PriceItem> list = engine.getPriceListForString(programRequest);
+        List<PriceItem> list = engine.getPriceListForStringCustom(programRequest);
+        long stop = new Date().getTime();
+        System.out.println("Time to search: " + (stop - start) + "ms");
+
+        model.addAttribute("position", unikoItem.getId());
+        model.addAttribute("name", unikoItem.getName());
+        model.addAttribute("list", list);
+        model.addAttribute("prog_req", programRequest);
+        return "zakaz";
     }
 
     @GetMapping("/previous")
@@ -69,7 +81,14 @@ public class ZakazController {
             return "zakaz";
         }
 
-        return enrichModel(model, unikoItem);
+        String programRequest = engine.getProgramRequest(unikoItem.getName());
+        List<PriceItem> list = engine.getPriceListForStringCustom(programRequest);
+
+        model.addAttribute("position", unikoItem.getId());
+        model.addAttribute("name", unikoItem.getName());
+        model.addAttribute("list", list);
+        model.addAttribute("prog_req", programRequest);
+        return "zakaz";
     }
 
     @GetMapping("/user_request")
@@ -82,7 +101,7 @@ public class ZakazController {
         if (userRequest.equals("")) {
             list = new ArrayList<>();
         } else {
-            list = engine.getPriceListForString(userRequest);
+            list = engine.getPriceListForStringCustom(userRequest);
         }
 
         UnikoLecItem unikoItem;
@@ -117,7 +136,7 @@ public class ZakazController {
         orderItemService.save(priceItemId, count);
         priceItemService.setInOrder(priceItemId, count);
 
-        List<PriceItem> list = engine.getPriceListForString(progRequest);
+        List<PriceItem> list = engine.getPriceListForStringCustom(progRequest);
 
         UnikoLecItem unikoItem;
         try {
@@ -134,16 +153,6 @@ public class ZakazController {
         model.addAttribute("list", list);
         model.addAttribute("user_req", progRequest);
         model.addAttribute("prog_req", progRequest);
-        return "zakaz";
-    }
-
-    private String enrichModel(Model model, UnikoLecItem unikoItem) {
-        List<PriceItem> list = engine.getPriceListForUnikoItem(unikoItem);
-
-        model.addAttribute("position", unikoItem.getId());
-        model.addAttribute("name", unikoItem.getName());
-        model.addAttribute("list", list);
-        model.addAttribute("prog_req", engine.getProgramRequest(unikoItem.getName()));
         return "zakaz";
     }
 }

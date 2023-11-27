@@ -146,4 +146,15 @@ public class PriceItem {
     public void setInOrder(int inOrder) {
         this.inOrder = inOrder;
     }
+
+    @Override
+    public String toString() {
+        return "PriceItem{" +
+                "id=" + id +
+                ", dist='" + dist + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", inOrder=" + inOrder +
+                '}';
+    }
 }
