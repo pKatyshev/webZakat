@@ -4,15 +4,17 @@ import com.katyshev.webZakat.models.OrderItem;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.repositories.OrderItemRepository;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@Log
 public class OrderItemService {
 
     private final OrderItemRepository orderItemRepository;
@@ -26,6 +28,7 @@ public class OrderItemService {
 
     @Transactional
     public void save(int price_item_id, int quantity) {
+        log.warning(String.format("Save in OrderItem, priceItem=%s, quantity=%s", price_item_id, quantity));
 
         if (quantity <= 0) {
             delete(price_item_id);
@@ -33,24 +36,21 @@ public class OrderItemService {
         }
 
         PriceItem priceItem = priceItemRepository.findById(price_item_id).get();
-        List<OrderItem> alreadyInOrderList = orderItemRepository.findAll();
-        OrderItem orderItem = new OrderItem();
-
-        orderItem.setName(priceItem.getName());
-        orderItem.setManufacturer(priceItem.getManufacturer());
-        orderItem.setPrice(priceItem.getPrice());
-        orderItem.setQuantity(quantity);
-        orderItem.setDistributor(priceItem.getDist());
-        orderItem.setPriceItemId(price_item_id);
+        List<OrderItem> alreadyInOrderList = orderItemRepository.findAll();;
 
         for (OrderItem already : alreadyInOrderList) {
-            if (already.getPriceItemId() == orderItem.getPriceItemId()) {
-                if (already.getQuantity() != quantity) {
-                    orderItemRepository.findById(already.getId()).setQuantity(quantity);
+            if (already.getPriceItem().getId() == price_item_id) {
+                if (already.getInOrder() != quantity) {
+                    orderItemRepository.findById(already.getId()).setInOrder(quantity);
                 }
                 return;
             }
         }
+
+        OrderItem orderItem = new OrderItem();
+        orderItem.setInOrder(quantity);
+        orderItem.setPriceItem(priceItem);
+        orderItem.setCreateTime(LocalDateTime.now());
 
         orderItemRepository.save(orderItem);
     }

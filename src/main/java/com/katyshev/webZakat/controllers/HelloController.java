@@ -1,6 +1,5 @@
 package com.katyshev.webZakat.controllers;
 
-import com.katyshev.webZakat.dao.UnikoLecItemDAO;
 import com.katyshev.webZakat.repositories.CustomPriceItemRepository;
 import com.katyshev.webZakat.repositories.UnikoLecItemRepository;
 import com.katyshev.webZakat.utils.Engine;
@@ -13,15 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HelloController {
 
-    private final UnikoLecItemDAO unikoLecItemDAO;
     private final UnikoLecItemRepository unikoLecItemRepository;
     private final CustomPriceItemRepository customPriceItemRepository;
     private final Engine engine;
     private final WordsWorker wordsWorker;
 
     @Autowired
-    public HelloController(UnikoLecItemDAO unikoLecItemDAO, UnikoLecItemRepository unikoLecItemRepository, CustomPriceItemRepository customPriceItemRepository, Engine engine, WordsWorker wordsWorker) {
-        this.unikoLecItemDAO = unikoLecItemDAO;
+    public HelloController(UnikoLecItemRepository unikoLecItemRepository, CustomPriceItemRepository customPriceItemRepository, Engine engine, WordsWorker wordsWorker) {
         this.unikoLecItemRepository = unikoLecItemRepository;
         this.customPriceItemRepository = customPriceItemRepository;
         this.engine = engine;

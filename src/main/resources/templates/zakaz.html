@@ -48,6 +48,7 @@
         <td th:text="${item.getPrice()}"></td>
         <td>
             <form action="/zakaz/user_add">
+<!--            <form th:onclick="">-->
                 <input type="text" name="count" th:value="${item.getInOrder()}" size="5"/>
                 <input type="hidden" name="position" th:value="${position}"/>
                 <input type="hidden" name="id" th:value="${item.getId()}"/>
@@ -65,5 +66,7 @@
             document.getElementById('insert_menu').innerHTML = data;
         });
 </script>
+<script src="/script/jquery.js"></script>
+<script src="/script/zakatScript.js"></script>
 </body>
 </html>

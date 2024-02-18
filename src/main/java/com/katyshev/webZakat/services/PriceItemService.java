@@ -3,6 +3,8 @@ package com.katyshev.webZakat.services;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.repositories.CustomPriceItemRepository;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
+import com.katyshev.webZakat.utils.Importer;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -12,17 +14,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Log
 @Service
 @Transactional(readOnly = true)
 public class PriceItemService {
 
     private final PriceItemRepository priceItemRepository;
     private final CustomPriceItemRepository customPriceItemRepository;
+    private final Importer importer;
 
     @Autowired
-    public PriceItemService(PriceItemRepository priceItemRepository, CustomPriceItemRepository customPriceItemRepository) {
+    public PriceItemService(PriceItemRepository priceItemRepository,
+                            CustomPriceItemRepository customPriceItemRepository,
+                            Importer importer) {
+
         this.priceItemRepository = priceItemRepository;
         this.customPriceItemRepository = customPriceItemRepository;
+        this.importer = importer;
     }
 
     public List<PriceItem> findAll() {
@@ -58,14 +66,18 @@ public class PriceItemService {
     }
 
     @Transactional
-    public void saveAllAsNew(List<PriceItem> list) {
+    public void importAllPrices() {
+        List<PriceItem> newPrices = importer.importAllPrices();
+        //todo
+        //обрабоать ошибку импорта
         priceItemRepository.truncateTable();
         priceItemRepository.restartSequence();
-        priceItemRepository.saveAll(list);
+        priceItemRepository.saveAll(newPrices);
     }
 
     @Transactional
     public void setInOrder(int id, int count) {
+        log.warning(String.format("Save in PriceItem, priceItem=%s, quantity=%s", id, count));
         PriceItem priceItem = priceItemRepository.findById(id).get();
         priceItem.setInOrder(count);
     }

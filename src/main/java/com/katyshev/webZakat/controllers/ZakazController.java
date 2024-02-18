@@ -1,5 +1,6 @@
 package com.katyshev.webZakat.controllers;
 
+import com.katyshev.webZakat.dto.UiDTO;
 import com.katyshev.webZakat.exceptions.UnikoItemListIsEmptyException;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;
@@ -7,6 +8,7 @@ import com.katyshev.webZakat.services.OrderItemService;
 import com.katyshev.webZakat.services.PriceItemService;
 import com.katyshev.webZakat.services.UnikoLecItemService;
 import com.katyshev.webZakat.utils.Engine;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+@Log
 @Controller
 @RequestMapping("/zakaz")
 public class ZakazController {
@@ -40,88 +42,95 @@ public class ZakazController {
     @GetMapping("/next")
     public String next(Model model,
                        @RequestParam(value = "position", required = false, defaultValue = "0")
-                       String position) {
-        int positionNumber = Integer.parseInt(position);
-        ++positionNumber;
+                       int positionNumber) {
 
-        UnikoLecItem unikoItem;
+        UiDTO uiDTO;
+        positionNumber++;
+
         try {
-            unikoItem= unikoLecItemService.findNextById(positionNumber);
+            uiDTO = unikoLecItemService.nextRequest(positionNumber, null);
         } catch (UnikoItemListIsEmptyException e) {
             model.addAttribute("list", new ArrayList<>());
             return "zakaz";
         }
 
-        String programRequest = engine.getProgramRequest(unikoItem.getName());
-        long start = new Date().getTime();
-//        List<PriceItem> list = engine.getPriceListForString(programRequest);
-        List<PriceItem> list = engine.getPriceListForStringCustom(programRequest);
-        long stop = new Date().getTime();
-        System.out.println("Time to search: " + (stop - start) + "ms");
-
-        model.addAttribute("position", unikoItem.getId());
-        model.addAttribute("name", unikoItem.getName());
-        model.addAttribute("list", list);
-        model.addAttribute("prog_req", programRequest);
+        model.addAttribute("position", uiDTO.getPosition());
+        model.addAttribute("name", uiDTO.getName());
+        model.addAttribute("list", uiDTO.getPriceItemList());
+        model.addAttribute("prog_req", uiDTO.getRequest());
         return "zakaz";
+    }
+
+    @GetMapping("/test_next")
+    public String testNext(Model model,
+                       @RequestParam(value = "position", required = false, defaultValue = "0")
+                       int positionNumber) {
+
+        UiDTO uiDTO;
+        positionNumber++;
+
+        try {
+            uiDTO = unikoLecItemService.nextRequest(positionNumber, null);
+        } catch (UnikoItemListIsEmptyException e) {
+            model.addAttribute("list", new ArrayList<>());
+            return "zakaz";
+        }
+
+        model.addAttribute("dto", uiDTO);
+        return "test_zakaz";
     }
 
     @GetMapping("/previous")
     public String previous(Model model,
-                       @RequestParam(value = "position", required = false, defaultValue = "0") String position) {
+                       @RequestParam(value = "position", required = false, defaultValue = "0") int positionNumber) {
 
-        int positionNumber = Integer.parseInt(position);
+
+        UiDTO uiDTO;
         --positionNumber;
 
-        UnikoLecItem unikoItem;
         try {
-            unikoItem= unikoLecItemService.findNextById(positionNumber);
+            uiDTO = unikoLecItemService.nextRequest(positionNumber, null);
         } catch (UnikoItemListIsEmptyException e) {
             model.addAttribute("list", new ArrayList<>());
             return "zakaz";
         }
 
-        String programRequest = engine.getProgramRequest(unikoItem.getName());
-        List<PriceItem> list = engine.getPriceListForStringCustom(programRequest);
-
-        model.addAttribute("position", unikoItem.getId());
-        model.addAttribute("name", unikoItem.getName());
-        model.addAttribute("list", list);
-        model.addAttribute("prog_req", programRequest);
+        model.addAttribute("position", uiDTO.getPosition());
+        model.addAttribute("name", uiDTO.getName());
+        model.addAttribute("list", uiDTO.getPriceItemList());
+        model.addAttribute("prog_req", uiDTO.getRequest());
         return "zakaz";
     }
 
     @GetMapping("/user_request")
     public String userRequest(Model model,
-                              @RequestParam(value = "position", required = false, defaultValue = "0") String position,
+                              @RequestParam(value = "position", required = false, defaultValue = "0") int positionNumber,
                               @RequestParam(value = "user_req", required = false, defaultValue = "") String userRequest) {
-        int positionNumber = Integer.parseInt(position);
-        List<PriceItem> list;
 
-        if (userRequest.equals("")) {
-            list = new ArrayList<>();
-        } else {
-            list = engine.getPriceListForStringCustom(userRequest);
-        }
+        UiDTO uiDTO;
 
-        UnikoLecItem unikoItem;
         try {
-            unikoItem = unikoLecItemService.findNextById(positionNumber);
+            uiDTO = unikoLecItemService.nextRequest(positionNumber, userRequest);
         } catch (UnikoItemListIsEmptyException e) {
-            model.addAttribute("list", list);
+            model.addAttribute("list", new ArrayList<>());
             model.addAttribute("user_req", userRequest);
             model.addAttribute("prog_req", userRequest);
             return "zakaz";
         }
 
-        model.addAttribute("position", unikoItem.getId());
-        model.addAttribute("name", unikoItem.getName());
-        model.addAttribute("list", list);
-        model.addAttribute("user_req", userRequest);
-        model.addAttribute("prog_req", userRequest);
+        model.addAttribute("position", uiDTO.getPosition());
+        model.addAttribute("name", uiDTO.getName());
+        model.addAttribute("list", uiDTO.getPriceItemList());
+        model.addAttribute("user_req", uiDTO.getRequest());
+        model.addAttribute("prog_req", uiDTO.getRequest());
         return "zakaz";
     }
 
+    /**
+     * todo
+     * do it on JS-function
+     */
+    @Deprecated
     @GetMapping("/user_add")
     public String addToOrder(Model model,
                              @RequestParam(value = "position", required = false, defaultValue = "0") String position,
@@ -136,23 +145,19 @@ public class ZakazController {
         orderItemService.save(priceItemId, count);
         priceItemService.setInOrder(priceItemId, count);
 
-        List<PriceItem> list = engine.getPriceListForStringCustom(progRequest);
+        UiDTO uiDTO;
 
-        UnikoLecItem unikoItem;
         try {
-            unikoItem = unikoLecItemService.findNextById(positionNumber);
+            uiDTO = unikoLecItemService.nextRequest(positionNumber, null);
         } catch (UnikoItemListIsEmptyException e) {
-            model.addAttribute("list", list);
-            model.addAttribute("user_req", progRequest);
-            model.addAttribute("prog_req", progRequest);
+            model.addAttribute("list", new ArrayList<>());
             return "zakaz";
         }
 
-        model.addAttribute("position", unikoItem.getId());
-        model.addAttribute("name", unikoItem.getName());
-        model.addAttribute("list", list);
-        model.addAttribute("user_req", progRequest);
-        model.addAttribute("prog_req", progRequest);
+        model.addAttribute("position", uiDTO.getPosition());
+        model.addAttribute("name", uiDTO.getName());
+        model.addAttribute("list", uiDTO.getPriceItemList());
+        model.addAttribute("prog_req", uiDTO.getRequest());
         return "zakaz";
     }
 }

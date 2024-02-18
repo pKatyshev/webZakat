@@ -2,6 +2,8 @@ package com.katyshev.webZakat.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -12,26 +14,13 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "order_number")
-    private int orderNumber;
+    @ManyToOne
+    @JoinColumn(name = "price_item_id", referencedColumnName = "id")
+    private PriceItem priceItem;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "manufacturer")
-    private String manufacturer;
-
-    @Column(name = "price")
-    private double price;
-
-    @Column(name = "quantity")
-    private int quantity;
-
-    @Column(name = "distributor")
-    private String distributor;
-
-    @Column(name ="price_item_id")
-    private int priceItemId;
+    private int inOrder;
+    private LocalDateTime createTime;
+    private LocalDateTime exportTime;
 
     public OrderItem() {
     }
@@ -44,60 +33,36 @@ public class OrderItem {
         this.id = id;
     }
 
-    public int getOrderNumber() {
-        return orderNumber;
+    public PriceItem getPriceItem() {
+        return priceItem;
     }
 
-    public void setOrderNumber(int orderNumber) {
-        this.orderNumber = orderNumber;
+    public void setPriceItem(PriceItem priceItem) {
+        this.priceItem = priceItem;
     }
 
-    public String getName() {
-        return name;
+    public int getInOrder() {
+        return inOrder;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setInOrder(int inOrder) {
+        this.inOrder = inOrder;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
-    public double getPrice() {
-        return price;
+    public LocalDateTime getExportTime() {
+        return exportTime;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getDistributor() {
-        return distributor;
-    }
-
-    public void setDistributor(String distributor) {
-        this.distributor = distributor;
-    }
-
-    public int getPriceItemId() {
-        return priceItemId;
-    }
-
-    public void setPriceItemId(int priceItemId) {
-        this.priceItemId = priceItemId;
+    public void setExportTime(LocalDateTime exportTime) {
+        this.exportTime = exportTime;
     }
 
     @Override
@@ -105,11 +70,11 @@ public class OrderItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return id == orderItem.id && orderNumber == orderItem.orderNumber && Double.compare(orderItem.price, price) == 0 && quantity == orderItem.quantity && priceItemId == orderItem.priceItemId && Objects.equals(name, orderItem.name) && Objects.equals(manufacturer, orderItem.manufacturer) && Objects.equals(distributor, orderItem.distributor);
+        return id == orderItem.id && inOrder == orderItem.inOrder && Objects.equals(priceItem, orderItem.priceItem) && Objects.equals(createTime, orderItem.createTime) && Objects.equals(exportTime, orderItem.exportTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderNumber, name, manufacturer, price, quantity, distributor, priceItemId);
+        return Objects.hash(id, priceItem, inOrder, createTime, exportTime);
     }
 }
