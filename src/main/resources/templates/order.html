@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>...</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+
+</head>
+<body>
+<h2>Web Zakat</h2>
+
+<div id="insert_menu"></div>
+
+<hr>
+<table th:if="${not list.isEmpty}" border="1">
+    <tr>
+        <th>Наименование</th>
+        <th>Производитель</th>
+        <th>Поставщик</th>
+        <th width="50">НДС</th>
+        <th>Остаток</th>
+        <th width="100">Цена</th>
+        <th>В заявке</th>
+    </tr>
+
+    <tr th:each="item : ${list}">
+        <td th:text="${item.priceItem.getName()}"></td>
+        <td th:text="${item.priceItem.getManufacturer()}"></td>
+        <td th:text="${item.priceItem.getDist()}"></td>
+        <td th:text="${item.priceItem.getNds()}"></td>
+        <td th:text="${item.priceItem.getQuantity()}"></td>
+        <td th:text="${item.priceItem.getPrice()}"></td>
+        <td>
+            <form action="/order/edit">
+                <input type="text" name="count" th:value="${item.priceItem.getInOrder()}" size="5"/>
+                <input type="hidden" name="price_item_id" th:value="${item.priceItem.getId()}"/>
+                <input type="submit" value="Изменить">
+            </form>
+        </td>
+        <td>
+           <form action="/order/delete">
+               <input class="delete_button" type="submit" value="Удалить"/>
+               <input type="hidden" name="price_item_id" th:value="${item.priceItem.getId()}"/>
+           </form>
+        </td>
+    </tr>
+</table>
+
+<script>
+    fetch('/menuButtons.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('insert_menu').innerHTML = data;
+        });
+</script>
+<script src="/script/jquery.js"></script>
+<script src="/script/zakatScript.js"></script>
+</body>
+</html>

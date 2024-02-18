@@ -6,3 +6,14 @@
     width: 240px;
     height: 25px;
 }
+
+.delete_button {
+    background-color: white;
+    color: black;
+    transition-duration: 0.4s;
+}
+
+.delete_button:hover {
+    background-color: #f44336;
+    color: white;
+}

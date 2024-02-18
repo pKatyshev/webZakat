@@ -77,7 +77,7 @@ public class PriceItemService {
 
     @Transactional
     public void setInOrder(int id, int count) {
-        log.warning(String.format("Save in PriceItem, priceItem=%s, quantity=%s", id, count));
+        log.info(String.format("Save in PriceItem, priceItem=%s, quantity=%s", id, count));
         PriceItem priceItem = priceItemRepository.findById(id).get();
         priceItem.setInOrder(count);
     }

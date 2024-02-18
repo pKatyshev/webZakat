@@ -14,4 +14,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 
     @Transactional
     OrderItem findById(int Id);
+
+    OrderItem findByPriceItemId(int id);
 }
