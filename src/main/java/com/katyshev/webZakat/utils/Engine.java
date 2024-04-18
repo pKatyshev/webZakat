@@ -1,5 +1,6 @@
 package com.katyshev.webZakat.utils;
 
+import com.katyshev.webZakat.models.ArchiveItem;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.services.PriceItemService;
 import lombok.extern.java.Log;
@@ -12,16 +13,12 @@ import java.util.stream.Collectors;
 @Component
 @Log
 public class Engine {
-    private final Importer importer;
     private final PriceItemService priceItemService;
     private final WordsWorker wordsWorker;
 
     @Autowired
-    public Engine(Importer importer,
-                  PriceItemService priceItemService,
+    public Engine(PriceItemService priceItemService,
                   WordsWorker wordsWorker) {
-
-        this.importer = importer;
         this.priceItemService = priceItemService;
         this.wordsWorker = wordsWorker;
     }

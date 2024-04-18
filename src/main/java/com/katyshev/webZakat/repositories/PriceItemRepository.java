@@ -12,11 +12,17 @@ public interface PriceItemRepository extends JpaRepository<PriceItem, Integer>  
 
     @Modifying
     @Transactional
-    @Query(value = "TRUNCATE TABLE price_item", nativeQuery = true)
+    @Query(value = "TRUNCATE TABLE price_item CASCADE", nativeQuery = true)
     void truncateTable();
 
     @Modifying
     @Transactional
     @Query(value = "ALTER SEQUENCE price_item_id_seq RESTART WITH 1", nativeQuery = true)
     void restartSequence();
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE price_item SET in_order = 0 WHERE in_order != 0", nativeQuery = true)
+    void clearInOrderColumn();
+
 }

@@ -55,10 +55,7 @@ public class OrderController {
 
     @GetMapping("/export")
     public String export() {
-
-
-
-        return "redirect:order";
+        orderItemService.export();
+        return "redirect:/order/show";
     }
-
 }

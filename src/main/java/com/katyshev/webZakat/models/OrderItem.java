@@ -20,6 +20,7 @@ public class OrderItem {
 
     private int inOrder;
     private LocalDateTime createTime;
+    //todo Это поле нужно удалить
     private LocalDateTime exportTime;
 
     public OrderItem() {

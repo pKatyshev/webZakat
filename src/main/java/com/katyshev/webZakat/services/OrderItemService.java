@@ -4,12 +4,14 @@ import com.katyshev.webZakat.models.OrderItem;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.repositories.OrderItemRepository;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
+import com.katyshev.webZakat.utils.Exporter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,13 +21,20 @@ import java.util.stream.Collectors;
 @Log
 public class OrderItemService {
 
+    private final ArchiveItemService archiveItemService;
     private final OrderItemRepository orderItemRepository;
     private final PriceItemRepository priceItemRepository;
+    private final Exporter exporter;
 
     @Autowired
-    public OrderItemService(OrderItemRepository orderItemRepository, PriceItemRepository priceItemRepository) {
+    public OrderItemService(ArchiveItemService archiveItemService,
+                            OrderItemRepository orderItemRepository,
+                            PriceItemRepository priceItemRepository,
+                            Exporter exporter) {
+        this.archiveItemService = archiveItemService;
         this.orderItemRepository = orderItemRepository;
         this.priceItemRepository = priceItemRepository;
+        this.exporter = exporter;
     }
 
     @Transactional
@@ -83,5 +92,21 @@ public class OrderItemService {
 
         orderItem.setInOrder(count);
         orderItem.getPriceItem().setInOrder(count);
+    }
+
+    @Transactional
+    public void export() {
+        List<PriceItem> orderExportList = new ArrayList<>();
+        List<OrderItem> orderItemList = orderItemRepository.findAll();
+
+        orderItemList.forEach(s -> {
+            orderExportList.add(s.getPriceItem());
+            s.setExportTime(LocalDateTime.now());
+        });
+
+        exporter.exportOrder(orderExportList);
+        archiveItemService.saveOrder(orderItemList);
+        orderItemRepository.truncateTable();
+        priceItemRepository.clearInOrderColumn();
     }
 }

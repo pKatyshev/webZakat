@@ -15,8 +15,8 @@
 <div id="insert_menu"></div>
 
 <h3 th:text="${dto.name}"></h3>
-<a th:href="@{/zakaz/previous?position={ident}(ident=${dto.position})}">Предыдущий</a>
-<a th:href="@{/zakaz/next?position={ident}(ident=${dto.position})}">Следующий</a>
+<a id="up-button" th:href="@{/zakaz/previous?position={ident}(ident=${dto.position})}">Предыдущий</a>
+<a id="down-button" th:href="@{/zakaz/next?position={ident}(ident=${dto.position})}">Следующий</a>
 <form align="right" action="/zakaz/user_request">
     <input type="text" name="request" th:value="${dto.request}"/>
     <input type="hidden" name="position" th:value="${dto.position}"/>
@@ -43,7 +43,7 @@
         <td th:text="${item.getPrice()}"></td>
         <td>
             <form action="/zakaz/user_add">
-                <input type="text" name="count" th:value="${item.getInOrder()}" size="5"/>
+                <input id="count_field" type="text" name="count" th:value="${item.getInOrder()}" size="5"/>
                 <input type="hidden" name="position" th:value="${dto.position}"/>
                 <input type="hidden" name="id" th:value="${item.getId()}"/>
                 <input type="hidden" name="request" th:value="${dto.request}"/>
@@ -59,6 +59,16 @@
         .then(data => {
             document.getElementById('insert_menu').innerHTML = data;
         });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.code === 'ArrowRight') {
+            document.getElementById('down-button').click();
+        }
+
+        if (e.code === 'ArrowLeft') {
+            document.getElementById('up-button').click();
+        }
+    });
 </script>
 <script src="/script/jquery.js"></script>
 <script src="/script/zakatScript.js"></script>
