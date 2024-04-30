@@ -31,7 +31,8 @@ public class ArchiveItemService {
 
     @Transactional
     public void saveOrder(List<OrderItem> order) {
-        int orderNumber = archiveItemRepository.getLastOrderNumber() + 1;
+        int lastOrderNumber = archiveItemRepository.getLastOrderNumber().orElse(0);
+        int orderNumber = lastOrderNumber + 1;
         List<ArchiveItem> archiveItems = convertOrderToArchiveList(order, orderNumber);
         save(archiveItems);
     }

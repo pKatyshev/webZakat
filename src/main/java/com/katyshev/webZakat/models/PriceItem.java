@@ -2,6 +2,8 @@ package com.katyshev.webZakat.models;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "price_item")
 public class PriceItem {
@@ -20,7 +22,7 @@ public class PriceItem {
     private double nds;
     private String gDate;
     private int quantity;
-    private float price;
+    private BigDecimal price;
     private int mark;
     private int inOrder;
 
@@ -123,11 +125,11 @@ public class PriceItem {
         this.quantity = quantity;
     }
 
-    public float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

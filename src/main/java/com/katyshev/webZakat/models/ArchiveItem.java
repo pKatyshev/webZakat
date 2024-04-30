@@ -2,6 +2,7 @@ package com.katyshev.webZakat.models;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class ArchiveItem {
     private int id;
     private int orderNumber;
     private String priceName;
-    private float price;
+    private BigDecimal price;
     private int quantity;
     private LocalDateTime exportTime;
 
@@ -46,11 +47,11 @@ public class ArchiveItem {
         this.priceName = priceName;
     }
 
-    public float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -75,7 +76,7 @@ public class ArchiveItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArchiveItem that = (ArchiveItem) o;
-        return orderNumber == that.orderNumber && Float.compare(that.price, price) == 0 && quantity == that.quantity && priceName.equals(that.priceName) && Objects.equals(exportTime, that.exportTime);
+        return orderNumber == that.orderNumber && quantity == that.quantity && priceName.equals(that.priceName) && Objects.equals(price, that.price) && Objects.equals(exportTime, that.exportTime);
     }
 
     @Override

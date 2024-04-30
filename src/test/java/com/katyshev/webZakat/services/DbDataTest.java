@@ -1,6 +1,5 @@
-package com.katyshev.webZakat.utils;
+package com.katyshev.webZakat.services;
 
-import com.katyshev.webZakat.services.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +10,15 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestPropertySource("/test.properties")
+
 @RequiredArgsConstructor
-class DbfExporterTest {
+class DbDataTest {
 
     @Autowired
-    private final OrderItemService orderItemService;
+    private final PriceItemService priceItemService;
 
     @Test
-    void exportOrder() {
-        orderItemService.export();
-
+    public void population() {
+        priceItemService.importAllPrices();
     }
 }

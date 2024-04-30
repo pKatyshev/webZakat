@@ -27,7 +27,6 @@ public class CustomPriceItemRepositoryImpl implements CustomPriceItemRepository{
             String[] words = query.split(" ");
             StringBuilder sql = new StringBuilder("SELECT * FROM price_item WHERE ");
 
-            //создаем запрос
             for (int i = 0; i < words.length; i++) {
                 sql.append(" name ILIKE ?");
                 if (i < words.length - 1) {
@@ -37,7 +36,6 @@ public class CustomPriceItemRepositoryImpl implements CustomPriceItemRepository{
 
             NativeQuery<PriceItem> nativeQuery = session.createNativeQuery(sql.toString(), PriceItem.class);
 
-            // сэттим параметры
             for (int i = 0; i < words.length; i++) {
                 nativeQuery.setParameter(i + 1, "%" + words[i] + "%");
             }

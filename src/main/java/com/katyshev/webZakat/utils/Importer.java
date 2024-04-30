@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -116,7 +117,7 @@ public class Importer {
         } catch (Exception e) {
             item.setQuantity(Integer.parseInt(quantityToInt.replaceAll("\\.0", "")));
         }
-        item.setPrice(Float.parseFloat(rowObj[11].toString()));
+        item.setPrice(new BigDecimal(rowObj[11].toString()));
         item.setMark(Integer.parseInt(rowObj[12].toString()));
 
         return item;
