@@ -16,9 +16,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log
 @Service
 @Transactional(readOnly = true)
-@Log
 public class OrderItemService {
 
     private final ArchiveItemService archiveItemService;
@@ -110,3 +110,4 @@ public class OrderItemService {
         priceItemRepository.clearInOrderColumn();
     }
 }
+

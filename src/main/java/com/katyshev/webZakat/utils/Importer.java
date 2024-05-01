@@ -1,9 +1,11 @@
 package com.katyshev.webZakat.utils;
 
+import com.katyshev.webZakat.exceptions.ImporterException;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;
 import com.linuxense.javadbf.DBFField;
 import com.linuxense.javadbf.DBFReader;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,7 @@ import java.util.Objects;
 
 
 @Component
+@Log
 public class Importer {
 
     private final MyFileManager myFileManager;
@@ -29,11 +32,11 @@ public class Importer {
     }
 
     public List<UnikoLecItem> importUnikoQuery() {
-        String path = myFileManager.getInputQueryPath();
+        String path = myFileManager.getUnikoQueryPath();
         Charset charset = Charset.forName("windows-1251");
         List<UnikoLecItem> unikoLecItems = new ArrayList<>();
         if(!Files.isRegularFile(Path.of(path))) {
-            System.out.println("Request file was NOT FOUND");
+            log.warning("Request file was NOT FOUND");
             return null;
         }
 
@@ -44,7 +47,6 @@ public class Importer {
                 DBFField field = reader.getField(i);
             }
             Object[] rowObj;
-            System.out.println("поля прочитаны");
             while ((rowObj = reader.nextRecord()) != null) {
                 int group = Integer.parseInt(rowObj[1].toString());
                 int tmc = Integer.parseInt(rowObj[2].toString());
@@ -54,27 +56,27 @@ public class Importer {
 
                 unikoLecItems.add(new UnikoLecItem(group, tmc, quantity, name, factory));
             }
-            System.out.println("Request file contains " + unikoLecItems.size() + " positions");
+            log.info(String.format("Request file contains %s positions", unikoLecItems.size()));
         } catch (Exception e) {
-            System.out.println("Ошибка чтения из запроса от Юнико");
+            log.warning("Error reading request file");
+            throw new ImporterException(String.format("file cannot be read. File: %s", path.toString()));
         }
         return unikoLecItems;
     }
 
     public List<PriceItem> importAllPrices() {
         List<PriceItem> priceItems = new ArrayList<>();
-        String pricesDirectory = "M:\\ZakatIO\\price";
+        String pricesDirectory = myFileManager.getPriceDirectory();
         for(File price : MyFileManager.getFileList(pricesDirectory)) {
             priceItems.addAll(Objects.requireNonNull(importPrice(price.toString())));
         }
         return priceItems;
     }
 
-    public static List<PriceItem> importPrice(String path) {
+    public List<PriceItem> importPrice(String path) {
         Charset charset = Charset.forName("Cp866");
         List<PriceItem> priceItems = new ArrayList<>();
         if(!Files.isRegularFile(Path.of(path))) {
-            System.out.println("file not found " + path);
             return null;
         }
 
@@ -84,11 +86,11 @@ public class Importer {
                 priceItems.add(readPriceItem(rowObj, path));
             }
         } catch (Exception e) {
-            System.out.println("price was NOT read completely");
+            log.warning(String.format("price was NOT read completely. File: %s", path));
             e.printStackTrace();
         }
 
-        System.out.println("File " + path + " was read successfully. File size: " + priceItems.size() + " positions");
+        log.info(String.format("File %s was read successfully. File size: %s positions", path, priceItems.size()));
         return priceItems;
     }
 

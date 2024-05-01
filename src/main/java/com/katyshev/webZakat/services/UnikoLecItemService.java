@@ -52,12 +52,10 @@ public class UnikoLecItemService {
     @Transactional
     public void importNewUnikoQuery() {
         List<UnikoLecItem> newQuery = importer.importUnikoQuery();
-        //todo
-        //обработать ошибку импорта
-
         unikoLecItemRepository.truncateTable();
         unikoLecItemRepository.restartSequence();
         unikoLecItemRepository.saveAll(newQuery);
+        log.info("uniko query was import successfully");
     }
 
     @Transactional
@@ -72,11 +70,7 @@ public class UnikoLecItemService {
 
     public UnikoLecItem findById(int id) {
         Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
-        if (unikoItem.isPresent()) {
-            return unikoItem.get();
-        } else {
-            throw new PositionIndexOfBound();
-        }
+        return unikoItem.orElseGet(UnikoLecItem::new);
     }
 
     public UnikoLecItem findNextById(int id) {
@@ -104,7 +98,7 @@ public class UnikoLecItemService {
         try{
             unikoItem = findNextById(positionNumber);
         } catch (UnikoItemListIsEmptyException e) {
-            log.warning("UnikoItemListIsEmptyException");
+            log.warning("UnikoItemList is empty!");
             uiDTO.setPosition(positionNumber);
             uiDTO.setName("");
             uiDTO.setPriceItemList(new ArrayList<>());

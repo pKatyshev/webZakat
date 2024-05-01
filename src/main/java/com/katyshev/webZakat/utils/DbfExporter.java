@@ -4,6 +4,7 @@ import com.katyshev.webZakat.models.PriceItem;
 import com.linuxense.javadbf.DBFDataType;
 import com.linuxense.javadbf.DBFField;
 import com.linuxense.javadbf.DBFWriter;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
@@ -12,6 +13,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 @Component
+@Log
 public class DbfExporter implements Exporter{
     private final MyFileManager myFileManager;
 
@@ -51,7 +53,7 @@ public class DbfExporter implements Exporter{
 
                 writer.addRecord(rowData);
             }
-
+            log.info("order was export successfully");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

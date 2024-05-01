@@ -68,8 +68,6 @@ public class PriceItemService {
     @Transactional
     public void importAllPrices() {
         List<PriceItem> newPrices = importer.importAllPrices();
-        //todo
-        //обрабоать ошибку импорта
         priceItemRepository.truncateTable();
         priceItemRepository.restartSequence();
         priceItemRepository.saveAll(newPrices);

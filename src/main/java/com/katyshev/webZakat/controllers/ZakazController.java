@@ -52,7 +52,7 @@ public class ZakazController {
                        @RequestParam(value = "position", required = false, defaultValue = "0") int positionNumber) {
 
 
-        --positionNumber;
+        positionNumber--;
         UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, null);
 
         model.addAttribute("dto", uiDTO);

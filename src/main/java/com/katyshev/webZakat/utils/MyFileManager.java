@@ -29,15 +29,20 @@ public class MyFileManager {
         return Arrays.asList(files);
     }
 
-    public String getInputQueryPath() {
+    public String getUnikoQueryPath() {
         return getOneFileFromDirectory(mainPath + "\\query");
+    }
+
+    public String getPriceDirectory() {
+        return mainPath + "\\price";
     }
 
     private String getOneFileFromDirectory(String path) {
         File directory = new File(path);
-        Optional<File> firstFile = Arrays.stream(directory.listFiles()).findFirst();
+        Optional<File> firstFile = Arrays.stream(Objects.requireNonNull(directory.listFiles())).findFirst();
 
-        if (!firstFile.isPresent()) {
+        if (firstFile.isEmpty()) {
+            log.warning("Uniko query file does not exist");
             throw new FileNotFoundException("no files found in the directory: " + directory);
         }
 
@@ -48,6 +53,11 @@ public class MyFileManager {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy_HH-mm-ss");
         String path = mainPath + "\\output\\order_" + LocalDateTime.now().format(formatter) + ".dbf";
 
+        File directory = new File(mainPath, "output");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
         File file = new File(path);
         try {
             file.createNewFile();
@@ -55,8 +65,6 @@ public class MyFileManager {
             log.warning("Output file cannot be created");
             throw new RuntimeException(e);
         }
-
-        // TODO: добавить авто создание директории "/output/"
 
         log.info(String.format("Output file \"%s\" was created", path));
         return file.toString();
@@ -74,7 +82,7 @@ public class MyFileManager {
         try {
             Files.walkFileTree(path, new MyFileVisitor());
         } catch (IOException e) {
-            System.out.println("Ошибка сбора файлов из директории");
+            log.warning(String.format("Error reading files from directory: %s", path.toString()));
         }
         return paths;
     }

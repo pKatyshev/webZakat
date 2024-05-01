@@ -1,6 +1,7 @@
 package com.katyshev.webZakat.controllers;
 
 import com.katyshev.webZakat.exceptions.FileNotFoundException;
+import com.katyshev.webZakat.exceptions.ImporterException;
 import com.katyshev.webZakat.services.PriceItemService;
 import com.katyshev.webZakat.services.UnikoLecItemService;
 import com.katyshev.webZakat.utils.Engine;
@@ -37,6 +38,12 @@ public class ImportController {
 
     @ExceptionHandler
     private String handle(FileNotFoundException e) {
+        System.out.println(e.getMessage());
+        return "redirect:/";
+    }
+
+    @ExceptionHandler
+    private String handle2(ImporterException e) {
         System.out.println(e.getMessage());
         return "redirect:/";
     }

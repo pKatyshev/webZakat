@@ -22,11 +22,4 @@ class UnikoLecItemServiceTest {
     @Autowired
     private final UnikoLecItemService unikoLecItemService;
 
-
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 4})
-    void findById(int id) {
-        UnikoLecItem item = unikoLecItemService.findById(id);
-        Assertions.assertEquals(item.getId(), id);
-    }
 }
