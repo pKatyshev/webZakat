@@ -1,7 +1,6 @@
 package com.katyshev.webZakat.services;
 
 import com.katyshev.webZakat.dto.UiDTO;
-import com.katyshev.webZakat.exceptions.PositionIndexOfBound;
 import com.katyshev.webZakat.exceptions.UnikoItemListIsEmptyException;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;

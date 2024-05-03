@@ -30,14 +30,14 @@ public class MyFileManager {
     }
 
     public String getUnikoQueryPath() {
-        return getOneFileFromDirectory(mainPath + "\\query");
+        return getUnikoFileFromDirectory(mainPath + "\\query");
     }
 
     public String getPriceDirectory() {
         return mainPath + "\\price";
     }
 
-    private String getOneFileFromDirectory(String path) {
+    private String getUnikoFileFromDirectory(String path) {
         File directory = new File(path);
         Optional<File> firstFile = Arrays.stream(Objects.requireNonNull(directory.listFiles())).findFirst();
 

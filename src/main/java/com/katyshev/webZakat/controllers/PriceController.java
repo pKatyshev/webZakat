@@ -23,8 +23,6 @@ public class PriceController {
     public String index(Model model,
                         @RequestParam(value = "page", required = false, defaultValue = "1") String page,
                         @RequestParam(value = "items_per_page", required = false, defaultValue = "30") String itemsPerPage ) {
-
-
         model.addAttribute("priceList", priceItemService.findAllPerPage(page, itemsPerPage));
         return "price";
     }

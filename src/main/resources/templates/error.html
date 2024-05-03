@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Error</title>
+</head>
+<body>
+<h2>Web Zakat</h2>
+
+<div>">
+    <p id="errorMessage" style="color: #ce0101" th:text="${message}"></p>
+    <script>
+        alert(document.getElementById("errorMessage").innerHTML)
+
+        window.location.href = 'http://localhost:3033/';
+    </script>
+</div>
+
+</body>
+</html>

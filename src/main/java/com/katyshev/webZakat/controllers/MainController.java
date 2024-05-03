@@ -33,15 +33,7 @@ public class MainController {
 
     @GetMapping("/delete_item")
     public String deleteItem(@RequestParam("id") int id) {
-        System.out.println("deleting id = " + id);
         unikoLecItemService.deleteById(id);
-        return "redirect:/";
-    }
-
-
-    @ExceptionHandler
-    private String handle(FileNotFoundException e) {
-        System.out.println(e.getMessage());
         return "redirect:/";
     }
 }
