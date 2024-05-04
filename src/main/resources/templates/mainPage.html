@@ -7,6 +7,10 @@
 <body>
 <h2>Web Zakat</h2>
 <div id="insert_menu"></div>
+<form method="POST" enctype="multipart/form-data" action="/upload">
+    Загрузить заявку: <input type="file" name="file"><br />
+    <input type="submit" value="Загрузить">
+</form>
 
 <br>
 <table th:if="${not list.isEmpty}" border="1">

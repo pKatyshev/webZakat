@@ -61,6 +61,7 @@ public class Importer {
             log.warning("Error reading request file");
             throw new ImporterException(String.format("file cannot be read. File: %s", path.toString()));
         }
+        myFileManager.moveToStorage(path);
         return unikoLecItems;
     }
 

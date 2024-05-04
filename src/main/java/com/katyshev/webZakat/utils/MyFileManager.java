@@ -8,10 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -85,5 +82,16 @@ public class MyFileManager {
             log.warning(String.format("Error reading files from directory: %s", path.toString()));
         }
         return paths;
+    }
+
+    public void moveToStorage(String absoluteFilePath) {
+        Path src = Path.of(absoluteFilePath);
+        Path dest = Path.of(src.getParent() + "\\storage\\" + src.getFileName());
+
+        try {
+            Files.move(src, dest,  StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
