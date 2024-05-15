@@ -1,6 +1,7 @@
 package com.katyshev.webZakat.services;
 
 import com.katyshev.webZakat.dto.UiDTO;
+import com.katyshev.webZakat.exceptions.FileNotFoundException;
 import com.katyshev.webZakat.exceptions.UnikoItemListIsEmptyException;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;
@@ -44,11 +45,6 @@ public class UnikoLecItemService {
     }
 
     @Transactional
-    public void saveAll(List<UnikoLecItem> list) {
-        unikoLecItemRepository.saveAll(list);
-    }
-
-    @Transactional
     public void importNewUnikoQuery() {
         List<UnikoLecItem> newQuery = importer.importUnikoQuery();
         unikoLecItemRepository.truncateTable();
@@ -69,11 +65,11 @@ public class UnikoLecItemService {
 
     public UnikoLecItem findById(int id) {
         Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
-        return unikoItem.orElseGet(UnikoLecItem::new);
+        return unikoItem.orElseThrow();
     }
 
     public UnikoLecItem findNextById(int id) {
-        Optional<Integer> optional = unikoLecItemRepository.getMaxId();
+        Optional<Integer> optional = unikoLecItemRepository.getMaxId();   //may be "orElseThrow"-function?
         if (optional.isEmpty()) throw new UnikoItemListIsEmptyException();
 
         int maxId = optional.get();
@@ -89,7 +85,7 @@ public class UnikoLecItemService {
         return unikoItem.get();
     }
 
-    public UiDTO nextRequest(int positionNumber, String user_request) throws UnikoItemListIsEmptyException {
+    public UiDTO nextRequest(int positionNumber, String user_request) {
         UiDTO uiDTO = new UiDTO();
         List<PriceItem> list;
         UnikoLecItem unikoItem;
