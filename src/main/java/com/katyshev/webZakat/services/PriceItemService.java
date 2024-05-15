@@ -54,7 +54,7 @@ public class PriceItemService {
             pageNumber = Integer.parseInt(page);
             countPerPage = Integer.parseInt(itemsPerPage);
         } catch (NumberFormatException e) {
-            return priceItemRepository.findAll(PageRequest.of(1, 30)).getContent();
+            return priceItemRepository.findAll(PageRequest.of(0, 30)).getContent();
         }
 
         return priceItemRepository.findAll(PageRequest.of(pageNumber, countPerPage)).getContent();

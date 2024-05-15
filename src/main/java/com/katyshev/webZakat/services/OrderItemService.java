@@ -63,7 +63,7 @@ public class OrderItemService {
         orderItem.setPriceItem(priceItem);
         orderItem.setCreateTime(LocalDateTime.now());
 
-        orderItemRepository.save(orderItem);
+        OrderItem saved = orderItemRepository.save(orderItem);
     }
 
     public List<OrderItem> findAll() {
@@ -71,6 +71,14 @@ public class OrderItemService {
                 .stream()
                 .sorted(Comparator.comparing(OrderItem::getId))
                 .collect(Collectors.toList());
+    }
+
+    public OrderItem findById(int id) {
+        return orderItemRepository.findById(id);
+    }
+
+    public OrderItem findByPriceItemId(int id) {
+        return orderItemRepository.findByPriceItemId(id);
     }
 
     @Transactional

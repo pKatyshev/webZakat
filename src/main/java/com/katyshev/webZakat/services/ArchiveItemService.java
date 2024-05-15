@@ -35,6 +35,10 @@ public class ArchiveItemService {
         save(archiveItems);
     }
 
+    public List<ArchiveItem> findAll() {
+        return archiveItemRepository.findAll();
+    }
+
     public List<ArchiveItem> convertOrderToArchiveList(List<OrderItem> order, int orderNumber) {
         ArrayList<ArchiveItem> archiveItems = new ArrayList<>();
 

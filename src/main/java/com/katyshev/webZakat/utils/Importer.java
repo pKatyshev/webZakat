@@ -1,5 +1,6 @@
 package com.katyshev.webZakat.utils;
 
+import com.katyshev.webZakat.exceptions.FileNotFoundException;
 import com.katyshev.webZakat.exceptions.ImporterException;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;
@@ -37,7 +38,7 @@ public class Importer {
         List<UnikoLecItem> unikoLecItems = new ArrayList<>();
         if(!Files.isRegularFile(Path.of(path))) {
             log.warning("Request file was NOT FOUND");
-            return null;
+            throw new FileNotFoundException("Uniko-query file was not found");
         }
 
         try (DBFReader reader = new DBFReader(new FileInputStream(path), charset))
