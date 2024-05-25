@@ -110,9 +110,9 @@ public class Importer {
         item.setEan13(rowObj[6].toString());
         item.setNds(Double.parseDouble(rowObj[7].toString()));
         try {
-            item.setgDate(rowObj[8].toString());
+            item.setGDate(rowObj[8].toString());
         } catch (NullPointerException e) {
-            item.setgDate("unavailable date");
+            item.setGDate("unavailable date");
         }
         String quantityToInt = rowObj[9].toString();
         String newString = quantityToInt.replaceAll("\\.00", "");

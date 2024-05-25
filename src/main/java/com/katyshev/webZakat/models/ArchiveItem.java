@@ -1,11 +1,15 @@
 package com.katyshev.webZakat.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "archive_item")
 public class ArchiveItem {
@@ -21,54 +25,6 @@ public class ArchiveItem {
     private LocalDateTime exportTime;
 
     public ArchiveItem() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(int orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    public String getPriceName() {
-        return priceName;
-    }
-
-    public void setPriceName(String priceName) {
-        this.priceName = priceName;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public LocalDateTime getExportTime() {
-        return exportTime;
-    }
-
-    public void setExportTime(LocalDateTime exportTime) {
-        this.exportTime = exportTime;
     }
 
     @Override

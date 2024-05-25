@@ -1,11 +1,15 @@
 package com.katyshev.webZakat.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "order_item")
 public class OrderItem {
@@ -20,50 +24,9 @@ public class OrderItem {
 
     private int inOrder;
     private LocalDateTime createTime;
-    //todo Это поле нужно удалить
     private LocalDateTime exportTime;
 
     public OrderItem() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public PriceItem getPriceItem() {
-        return priceItem;
-    }
-
-    public void setPriceItem(PriceItem priceItem) {
-        this.priceItem = priceItem;
-    }
-
-    public int getInOrder() {
-        return inOrder;
-    }
-
-    public void setInOrder(int inOrder) {
-        this.inOrder = inOrder;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getExportTime() {
-        return exportTime;
-    }
-
-    public void setExportTime(LocalDateTime exportTime) {
-        this.exportTime = exportTime;
     }
 
     @Override

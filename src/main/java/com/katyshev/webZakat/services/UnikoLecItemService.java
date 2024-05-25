@@ -69,11 +69,8 @@ public class UnikoLecItemService {
     }
 
     public UnikoLecItem findNextById(int id) {
-        Optional<Integer> optional = unikoLecItemRepository.getMaxId();   //may be "orElseThrow"-function?
-        if (optional.isEmpty()) throw new UnikoItemListIsEmptyException();
-
-        int maxId = optional.get();
-
+        Optional<Integer> optional = unikoLecItemRepository.getMaxId();
+        int maxId = optional.orElseThrow(UnikoItemListIsEmptyException::new);
         if (id > maxId) id = 1;
 
         Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
