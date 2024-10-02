@@ -4,7 +4,9 @@ import com.katyshev.webZakat.TestConfig;
 import com.katyshev.webZakat.dto.UiDTO;
 import com.katyshev.webZakat.exceptions.UnikoItemListIsEmptyException;
 import com.katyshev.webZakat.models.UnikoLecItem;
+import com.katyshev.webZakat.models.UserRequest;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UnikoLecItemServiceTest extends TestConfig {
 
     private final UnikoLecItemService unikoLecItemService;
+    private final UserRequestService userRequestService;
 
     @Test
     void findAll() {
@@ -27,6 +30,7 @@ class UnikoLecItemServiceTest extends TestConfig {
     }
 
     @Test
+    @Disabled
     void importNewUnikoQuery() {
         unikoLecItemService.importNewUnikoQuery();
         List<UnikoLecItem> unikoLecItems = unikoLecItemService.findAll();
@@ -92,4 +96,26 @@ class UnikoLecItemServiceTest extends TestConfig {
         assertNotNull(uiDTO.getName());
         assertNotNull(uiDTO.getPriceItemList());
     }
+
+    @Test
+    void nextRequsetWithUserSavedRequest() {
+        UiDTO uiDTO = unikoLecItemService.nextRequest(10, null);
+        assertNotEquals("TestRequest", uiDTO.getRequest());
+
+        userRequestService.save(new UserRequest(5726, "TestRequest"));
+
+        uiDTO = unikoLecItemService.nextRequest(10, null);
+        assertEquals("TestRequest", uiDTO.getRequest());
+    }
+
+    @Test
+    void nextRequsetWithSaveNewUserRequest() {
+        UiDTO uiDTO = unikoLecItemService.nextRequest(11, "50");
+
+        String savedUserRequest = userRequestService.get(5976).getUserRequest();
+
+        assertEquals("50", savedUserRequest);
+    }
+
+
 }

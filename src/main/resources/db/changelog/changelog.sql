@@ -53,3 +53,14 @@ CREATE TABLE archive_item
     quantity INTEGER NOT NULL,
     export_time timestamp
 )
+
+-- changeset katyshev:addUserRequestTable
+
+CREATE TABLE user_request
+(
+    order_group_id INTEGER NOT NULL,
+    user_request VARCHAR(100)
+)
+
+-- changeset katyshev:editUserRequestTable
+ALTER TABLE user_request ADD PRIMARY KEY (order_group_id);

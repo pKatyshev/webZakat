@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +49,7 @@ class PriceItemServiceTest extends TestConfig {
     }
 
     @Test
+    @Transactional(readOnly = false)
     void importAllPrices() {
         priceItemService.importAllPrices();
         List<PriceItem> priceItems = priceItemService.findAll();
