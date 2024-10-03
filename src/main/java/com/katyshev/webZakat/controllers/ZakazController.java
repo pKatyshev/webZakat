@@ -34,9 +34,7 @@ public class ZakazController {
     public String next(Model model,
                        @RequestParam(value = "position", required = false, defaultValue = "0")
                        int positionNumber) {
-
-        positionNumber++;
-        UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, null);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, null, true);
 
         model.addAttribute("dto", uiDTO);
         return "zakaz";
@@ -47,9 +45,7 @@ public class ZakazController {
     public String previous(Model model,
                        @RequestParam(value = "position", required = false, defaultValue = "0") int positionNumber) {
 
-
-        positionNumber--;
-        UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, null);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, null, false);
 
         model.addAttribute("dto", uiDTO);
         return "zakaz";
@@ -60,7 +56,7 @@ public class ZakazController {
                               @RequestParam(value = "position", required = false, defaultValue = "0") int positionNumber,
                               @RequestParam(value = "request", required = false, defaultValue = "") String userRequest) {
 
-        UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, userRequest);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, userRequest, true);
 
         model.addAttribute("dto", uiDTO);
         return "zakaz";
@@ -80,7 +76,7 @@ public class ZakazController {
         orderItemService.save(priceItemId, count);
         priceItemService.setInOrder(priceItemId, count);
 
-        UiDTO uiDTO = unikoLecItemService.nextRequest(position, progRequest);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(position, progRequest, true);
 
         model.addAttribute("dto", uiDTO);
         return "zakaz";

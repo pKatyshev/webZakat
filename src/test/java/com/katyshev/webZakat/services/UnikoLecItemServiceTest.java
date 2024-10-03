@@ -70,7 +70,7 @@ class UnikoLecItemServiceTest extends TestConfig {
 
     @Test
     void nextRequest() {
-        UiDTO uiDTO = unikoLecItemService.nextRequest(3, null);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(3, null, true);
 
         assertNotNull(uiDTO.getRequest());
         assertNotNull(uiDTO.getName());
@@ -80,7 +80,7 @@ class UnikoLecItemServiceTest extends TestConfig {
     @Test
     void nextRequestWitnEmptyList() {
         unikoLecItemService.deleteAll();
-        UiDTO uiDTO = unikoLecItemService.nextRequest(3, null);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(3, null, true);
 
         assertNotNull(uiDTO.getName());
         assertNotNull(uiDTO.getPriceItemList());
@@ -90,7 +90,7 @@ class UnikoLecItemServiceTest extends TestConfig {
     @ValueSource(strings = {"парацетамол", "ПАРАЦЕТАМОЛ", "Арбидол", "10 20"})
     void nextRequestWitnUserRequest(String request) {
         unikoLecItemService.deleteAll();
-        UiDTO uiDTO = unikoLecItemService.nextRequest(3, request);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(3, request, true);
 
         assertNotNull(uiDTO.getRequest());
         assertNotNull(uiDTO.getName());
@@ -99,18 +99,18 @@ class UnikoLecItemServiceTest extends TestConfig {
 
     @Test
     void nextRequsetWithUserSavedRequest() {
-        UiDTO uiDTO = unikoLecItemService.nextRequest(10, null);
+        UiDTO uiDTO = unikoLecItemService.nextRequest(10, null, true);
         assertNotEquals("TestRequest", uiDTO.getRequest());
 
         userRequestService.save(new UserRequest(5726, "TestRequest"));
 
-        uiDTO = unikoLecItemService.nextRequest(10, null);
+        uiDTO = unikoLecItemService.nextRequest(10, null, true);
         assertEquals("TestRequest", uiDTO.getRequest());
     }
 
     @Test
     void nextRequsetWithSaveNewUserRequest() {
-        UiDTO uiDTO = unikoLecItemService.nextRequest(11, "50");
+        UiDTO uiDTO = unikoLecItemService.nextRequest(11, "50", true);
 
         String savedUserRequest = userRequestService.get(5976).getUserRequest();
 

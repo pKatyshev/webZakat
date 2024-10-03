@@ -15,8 +15,8 @@
 <div id="insert_menu"></div>
 
 <h3 th:text="${dto.name}"></h3>
-<a id="up-button" th:href="@{/zakaz/previous?position={ident}(ident=${dto.position})}">Предыдущий</a>
-<a id="down-button" th:href="@{/zakaz/next?position={ident}(ident=${dto.position})}">Следующий</a>
+<a id="up-button" th:href="@{/zakaz/previous?position={ident}(ident=${dto.position - 1})}">Предыдущий</a>
+<a id="down-button" th:href="@{/zakaz/next?position={ident}(ident=${dto.position + 1})}">Следующий</a>
 <form align="right" action="/zakaz/user_request">
     <input type="text" name="request" th:value="${dto.request}"/>
     <input type="hidden" name="position" th:value="${dto.position}"/>

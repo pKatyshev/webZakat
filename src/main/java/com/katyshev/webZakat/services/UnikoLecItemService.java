@@ -65,33 +65,14 @@ public class UnikoLecItemService {
         unikoLecItemRepository.deleteById(id);
     }
 
-    public UnikoLecItem findById(int id) {
-        Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
-        return unikoItem.orElseThrow();
-    }
-
-    public UnikoLecItem findNextById(int id) {
-        Optional<Integer> optional = unikoLecItemRepository.getMaxId();
-        int maxId = optional.orElseThrow(UnikoItemListIsEmptyException::new);
-        if (id > maxId) id = 1;
-
-        Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
-
-        while (unikoItem.isEmpty()) {
-            unikoItem = unikoLecItemRepository.findById(++id);
-        }
-
-        return unikoItem.get();
-    }
-
     @Transactional
-    public UiDTO nextRequest(int positionNumber, String user_request) {
+    public UiDTO nextRequest(int positionNumber, String user_request, boolean next) {
         UiDTO uiDTO = new UiDTO();
         List<PriceItem> list;
         UnikoLecItem unikoItem;
 
         try {
-            unikoItem = findNextById(positionNumber);
+            unikoItem = findNextById(positionNumber, next);
         } catch (UnikoItemListIsEmptyException e) {
             log.warning("UnikoItemList is empty!");
             uiDTO.setPosition(positionNumber);
@@ -132,5 +113,37 @@ public class UnikoLecItemService {
         uiDTO.setRequest(request);
 
         return uiDTO;
+    }
+
+    public UnikoLecItem findNextById(int id, boolean next) {
+        Optional<Integer> optional = unikoLecItemRepository.getMaxId();
+        int maxId = optional.orElseThrow(UnikoItemListIsEmptyException::new);
+        if (id > maxId) id = 1;
+        if (id <= 0 ) id = maxId;
+
+        return getUnikoLecItem(id, next);
+    }
+
+    public UnikoLecItem findNextById(int id) {
+        return findNextById(id, true);
+    }
+
+    private UnikoLecItem getUnikoLecItem(int id, boolean next) {
+
+        Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
+
+        while (unikoItem.isEmpty()) {
+            if (next) {
+                unikoItem = unikoLecItemRepository.findById(++id);
+            } else {
+                unikoItem = unikoLecItemRepository.findById(--id);
+            }
+        }
+        return unikoItem.get();
+    }
+
+    public UnikoLecItem findById(int id) {
+        Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
+        return unikoItem.orElseThrow();
     }
 }
