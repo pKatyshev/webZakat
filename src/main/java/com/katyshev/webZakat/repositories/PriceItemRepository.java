@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 @Repository
 public interface PriceItemRepository extends JpaRepository<PriceItem, Integer>  {
 
@@ -25,4 +28,6 @@ public interface PriceItemRepository extends JpaRepository<PriceItem, Integer>  
     @Query(value = "UPDATE price_item SET in_order = 0 WHERE in_order != 0", nativeQuery = true)
     void clearInOrderColumn();
 
+    @Query(value ="SELECT SUM(price * in_order) FROM price_item WHERE in_order > 0", nativeQuery = true)
+    Optional<BigDecimal> getTotalAmount();
 }

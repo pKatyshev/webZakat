@@ -5,71 +5,93 @@
     <title>Заказ</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>...</title>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
-
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script src="/script/zakatScript.js"></script>
 </head>
-<body>
-<h2>Web Zakat</h2>
-
-<div id="insert_menu"></div>
-
-<h3 th:text="${dto.name}"></h3>
-<a id="up-button" th:href="@{/zakaz/previous?position={ident}(ident=${dto.position - 1})}">Предыдущий</a>
-<a id="down-button" th:href="@{/zakaz/next?position={ident}(ident=${dto.position + 1})}">Следующий</a>
-<form align="right" action="/zakaz/user_request">
-    <input type="text" name="request" th:value="${dto.request}"/>
-    <input type="hidden" name="position" th:value="${dto.position}"/>
-    <input type="submit" value="Поиск" class="search_button">
-</form>
-<hr>
-<table th:if="${not dto.priceItemList.isEmpty}" border="1">
-    <tr>
-        <th>Наименование</th>
-        <th>Производитель</th>
-        <th>Поставщик</th>
-        <th width="50">НДС</th>
-        <th>Остаток</th>
-        <th width="100">Цена</th>
-        <th>В заявке</th>
-    </tr>
-
-    <tr th:each="item : ${dto.priceItemList}">
-        <td th:text="${item.getName()}"></td>
-        <td th:text="${item.getManufacturer()}"></td>
-        <td th:text="${item.getDist()}"></td>
-        <td th:text="${item.getNds()}"></td>
-        <td th:text="${item.getQuantity()}"></td>
-        <td th:text="${item.getPrice()}"></td>
-        <td>
-            <form action="/zakaz/user_add">
-                <input id="count_field" type="text" name="count" th:value="${item.getInOrder()}" size="5"/>
+<body class="body">
+<header class="header">
+    <div class="nav-bar">
+        <a class="nav-button app-name-link" href="http://localhost:3033">Web Zakat</a>
+        <div class="dropdown nav-button">
+            <a class="dropbtn">Импорт ▾</a>
+            <div class="dropdown-content">
+                <a href="/import/prices">Импортировать прайс-листы</a>
+                <a href="/import/query">Импортировать заявку</a>
+            </div>
+        </div>
+        <div class="dropdown nav-button">
+            <a class="dropbtn">Заявка ▾</a>
+            <div class="dropdown-content">
+                <a href="/zakaz/next">Обработка заявки</a>
+                <a href="/">Показать заявку</a>
+                <a href="/clear_query">Удалить заявку</a>
+            </div>
+        </div>
+        <a class="nav-button" href="/price/show">Сводный прайс-лист</a>
+        <a class="nav-button" href="/order/show">Корзина</a>
+        <div class="total-amount nav-button">
+            <p th:text="${'Сумма: ' + dto.getTotalAmount()}"></p>
+        </div>
+    </div>
+</header>
+<main class="main">
+    <div class="search-panel">
+        <div class="auto-search">
+            <div class="auto-search-string">
+                <p th:text="${dto.name}"></p>
+            </div>
+            <div class="auto-search-nav-buttons">
+                <a id="up-button" class="auto-search-nav-button"
+                   th:href="@{/zakaz/previous?position={ident}(ident=${dto.position - 1})}">Предыдущий</a>
+                <a id="down-button" class="auto-search-nav-button"
+                   th:href="@{/zakaz/next?position={ident}(ident=${dto.position + 1})}">Следующий</a>
+            </div>
+        </div>
+        <div class="manual-search">
+            <form action="/zakaz/user_request">
+                <div class="form-row">
+                    <input type="text" name="request" class="field" required minlength="2" th:value="${dto.request}"/>
+                </div>
                 <input type="hidden" name="position" th:value="${dto.position}"/>
-                <input type="hidden" name="id" th:value="${item.getId()}"/>
-                <input type="hidden" name="request" th:value="${dto.request}"/>
-                <input type="submit" value="Добавить">
+                <div class="form-row">
+                    <input type="submit" value="Поиск" class="search-button">
+                </div>
             </form>
-        </td>
-    </tr>
-</table>
-
-<script>
-    fetch('/menuButtons.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('insert_menu').innerHTML = data;
-        });
-
-    document.addEventListener('keydown', function (e) {
-        if (e.code === 'ArrowRight') {
-            document.getElementById('down-button').click();
-        }
-
-        if (e.code === 'ArrowLeft') {
-            document.getElementById('up-button').click();
-        }
-    });
-</script>
+        </div>
+    </div>
+    <div class="price-table">
+        <table th:if="${not dto.priceItemList.isEmpty}">
+            <tr>
+                <th width="100%">Наименование</th>
+                <th>Производитель</th>
+                <th>Поставщик</th>
+                <th width="50">НДС</th>
+                <th>Остаток</th>
+                <th width="100">Цена</th>
+                <th>В заявке</th>
+                <th>Сумма</th>
+            </tr>
+            <tr th:each="item : ${dto.priceItemList}" th:class="${item.getInOrder() > 0} ? ordered-table-row">
+                <td th:text="${item.getName()}"></td>
+                <td th:text="${item.getManufacturer()}"></td>
+                <td th:text="${item.getDist()}"></td>
+                <td th:text="${item.getNds()}"></td>
+                <td th:text="${item.getQuantity()}"></td>
+                <td th:text="${item.getPrice()}"></td>
+                <td>
+                    <form action="/zakaz/user_add">
+                        <input class="user-count" id="count_field" type="text" name="count"
+                               th:value="${item.getInOrder()}" size="4"/>
+                        <input type="hidden" name="position" th:value="${dto.position}"/>
+                        <input type="hidden" name="id" th:value="${item.getId()}"/>
+                        <input type="hidden" name="request" th:value="${dto.request}"/>
+                    </form>
+                </td>
+                <td th:text="${item.getInOrder() > 0} ? ${item.getPrice() * item.getInOrder()} : ''"></td>
+            </tr>
+        </table>
+    </div>
+</main>
 <script src="/script/jquery.js"></script>
 <script src="/script/zakatScript.js"></script>
 </body>

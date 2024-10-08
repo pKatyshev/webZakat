@@ -5,15 +5,32 @@
     <title>Заказ</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>...</title>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
-
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h2>Web Zakat</h2>
-
-<div id="insert_menu"></div>
-
+<header class="header">
+    <div class="nav-bar">
+        <a class="nav-button app-name-link" href="http://localhost:3033">Web Zakat</a>
+        <div class="dropdown nav-button">
+            <a class="dropbtn">Импорт ▾</a>
+            <div class="dropdown-content">
+                <a href="/import/prices">Импортировать прайс-листы</a>
+                <a href="/import/query">Импортировать заявку</a>
+            </div>
+        </div>
+        <div class="dropdown nav-button">
+            <a class="dropbtn">Заявка ▾</a>
+            <div class="dropdown-content">
+                <a href="/zakaz/next">Обработка заявки</a>
+                <a href="/">Показать заявку</a>
+                <a href="/clear_query">Удалить заявку</a>
+            </div>
+        </div>
+        <a class="nav-button" href="/price/show">Сводный прайс-лист</a>
+        <a class="nav-button" href="/order/show">Корзина</a>
+    </div>
+</header>
+<div class="empty-block"></div>
 <hr>
 <table th:if="${not list.isEmpty}" border="1">
     <tr>
@@ -42,7 +59,7 @@
         </td>
         <td>
            <form action="/order/delete">
-               <input class="delete_button" type="submit" value="Удалить"/>
+               <input class="delete-button" type="submit" value="Удалить"/>
                <input type="hidden" name="price_item_id" th:value="${item.priceItem.getId()}"/>
            </form>
         </td>
@@ -51,16 +68,8 @@
 <br>
 <hr>
 <form action="/order/export">
-    <button class="menu_button">Отправить заявку</button>
+    <button class="menu-button">Отправить заявку</button>
 </form>
-
-<script>
-    fetch('/menuButtons.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('insert_menu').innerHTML = data;
-        });
-</script>
 <script src="/script/jquery.js"></script>
 <script src="/script/zakatScript.js"></script>
 </body>

@@ -7,4 +7,14 @@ function add_func(task_id) {
     })
 
     setTimeout( () => {document.location.reload();}, 300)
-}
+};
+
+document.addEventListener('keydown', function (e) {
+    if (e.code === 'ArrowRight') {
+        document.getElementById('down-button').click();
+    }
+
+    if (e.code === 'ArrowLeft') {
+        document.getElementById('up-button').click();
+    }
+});

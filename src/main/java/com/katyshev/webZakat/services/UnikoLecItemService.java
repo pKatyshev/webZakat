@@ -5,6 +5,7 @@ import com.katyshev.webZakat.exceptions.UnikoItemListIsEmptyException;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.models.UnikoLecItem;
 import com.katyshev.webZakat.models.UserRequest;
+import com.katyshev.webZakat.repositories.PriceItemRepository;
 import com.katyshev.webZakat.repositories.UnikoLecItemRepository;
 import com.katyshev.webZakat.utils.Engine;
 import com.katyshev.webZakat.utils.Importer;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,13 +27,19 @@ import java.util.Optional;
 public class UnikoLecItemService {
 
     private final UnikoLecItemRepository unikoLecItemRepository;
+    private final PriceItemRepository priceItemRepository;
     private final UserRequestService userRequestService;
     private final Importer importer;
     private final Engine engine;
 
     @Autowired
-    public UnikoLecItemService(UnikoLecItemRepository unikoLecItemRepository, UserRequestService userRequestService, Importer importer, Engine engine) {
+    public UnikoLecItemService(UnikoLecItemRepository unikoLecItemRepository,
+                               PriceItemRepository priceItemRepository,
+                               UserRequestService userRequestService,
+                               Importer importer,
+                               Engine engine) {
         this.unikoLecItemRepository = unikoLecItemRepository;
+        this.priceItemRepository = priceItemRepository;
         this.userRequestService = userRequestService;
         this.importer = importer;
         this.engine = engine;
@@ -111,6 +119,7 @@ public class UnikoLecItemService {
         uiDTO.setName(unikoItem.getName());
         uiDTO.setPriceItemList(list);
         uiDTO.setRequest(request);
+        uiDTO.setTotalAmount(priceItemRepository.getTotalAmount().orElse(new BigDecimal("0.00")));
 
         return uiDTO;
     }
