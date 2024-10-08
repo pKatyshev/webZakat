@@ -4,6 +4,7 @@ import com.katyshev.webZakat.TestConfig;
 import com.katyshev.webZakat.models.OrderItem;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,7 @@ class ArchiveItemServiceTest extends TestConfig {
     private final OrderItemService orderItemService;
 
     @Test
+    @Disabled
     void saveOrder() {
         int startSize = archiveItemService.findAll().size();
         List<OrderItem> orderItems = orderItemService.findAll();

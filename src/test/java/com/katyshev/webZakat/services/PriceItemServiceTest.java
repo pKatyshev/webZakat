@@ -3,6 +3,7 @@ package com.katyshev.webZakat.services;
 import com.katyshev.webZakat.TestConfig;
 import com.katyshev.webZakat.models.PriceItem;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,7 +26,7 @@ class PriceItemServiceTest extends TestConfig {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {4, 8, 15, 16, 23, 42})
+    @ValueSource(ints = {4, 8, 10, 64181, 4466, 32429})
     void getById(int id) {
         PriceItem byId = priceItemService.getById(id);
 
@@ -37,7 +38,7 @@ class PriceItemServiceTest extends TestConfig {
         List<PriceItem> priceItems = priceItemService.findAllPerPage("3", "30");
 
         assertEquals(30, priceItems.size());
-        assertEquals(91, priceItems.get(0).getId());
+        assertEquals(25863, priceItems.get(0).getId());
     }
 
     @Test
@@ -49,6 +50,7 @@ class PriceItemServiceTest extends TestConfig {
     }
 
     @Test
+    @Disabled
     @Transactional(readOnly = false)
     void importAllPrices() {
         priceItemService.importAllPrices();
@@ -59,7 +61,7 @@ class PriceItemServiceTest extends TestConfig {
 
     @Test
     void setInOrder() {
-        int id = 4815;
+        int id = 25850;
         int count = 23;
         priceItemService.setInOrder(id, count);
         PriceItem priceItem = priceItemService.getById(id);

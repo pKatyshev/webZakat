@@ -22,8 +22,8 @@ class OrderItemServiceTest extends TestConfig {
 
     @Test
     void save() {
-        int id = 1955;
-        int count = 5;
+        int id = 8;
+        int count = 1;
 
         orderItemService.save(id, count);
         OrderItem byId = orderItemService.findByPriceItemId(id);
