@@ -16,9 +16,7 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Component
@@ -36,6 +34,7 @@ public class Importer {
         String path = myFileManager.getUnikoQueryPath();
         Charset charset = Charset.forName("windows-1251");
         List<UnikoLecItem> unikoLecItems = new ArrayList<>();
+
         if(!Files.isRegularFile(Path.of(path))) {
             log.warning("Request file was NOT FOUND");
             throw new FileNotFoundException("Uniko-query file was not found");
@@ -63,6 +62,9 @@ public class Importer {
             throw new ImporterException(String.format("file cannot be read. File: %s", path.toString()));
         }
         myFileManager.moveToStorage(path);
+
+        Collections.sort(unikoLecItems);
+
         return unikoLecItems;
     }
 

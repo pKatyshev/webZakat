@@ -10,7 +10,7 @@
 <div>">
     <p id="errorMessage" style="color: #ce0101" th:text="${message}"></p>
     <script>
-        alert(document.getElementById("errorMessage").innerHTML)
+        alert(document.getElementById("errorMessage").innerText)
 
         window.location.href = 'http://localhost:3033/';
     </script>

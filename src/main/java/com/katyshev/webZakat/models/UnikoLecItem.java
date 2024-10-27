@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "uniko_lec_item")
-public class UnikoLecItem {
+public class UnikoLecItem implements Comparable<UnikoLecItem>{
 
     @Id
     @Column(name = "id")
@@ -64,4 +64,8 @@ public class UnikoLecItem {
         return "LecItem{"+ " " + orderGroup + " \t" + tmc +  " \t" + quantity + " \t" + name +"}";
     }
 
+    @Override
+    public int compareTo(UnikoLecItem o) {
+        return this.name.compareTo(o.getName());
+    }
 }

@@ -32,7 +32,7 @@ public class ZakazController {
 
     @GetMapping("/next")
     public String next(Model model,
-                       @RequestParam(value = "position", required = false, defaultValue = "0")
+                       @RequestParam(value = "position", required = false, defaultValue = "1")
                        int positionNumber) {
         UiDTO uiDTO = unikoLecItemService.nextRequest(positionNumber, null, true);
 
