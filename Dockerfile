@@ -3,3 +3,4 @@ ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 EXPOSE 3033
 ENTRYPOINT ["java", "-jar", "/app.jar"]
+RUN mkdir "/usr/local/zakatIO"

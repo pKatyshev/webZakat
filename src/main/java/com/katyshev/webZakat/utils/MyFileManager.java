@@ -2,11 +2,15 @@ package com.katyshev.webZakat.utils;
 
 
 import com.katyshev.webZakat.exceptions.FileNotFoundException;
+import com.katyshev.webZakat.exceptions.WrongFileException;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -19,6 +23,7 @@ import java.util.*;
 public class MyFileManager {
     @Value("${io_Directory}")
     private String mainPath;
+    private final String separator = File.separator;
 
     public static List<File> getFileList(String path) {
         File file = new File(path);
@@ -26,16 +31,38 @@ public class MyFileManager {
         return Arrays.asList(files);
     }
 
-    public String getUnikoQueryPath() {
-        return getUnikoFileFromDirectory(mainPath + "\\query");
+    public String getUnikoQueryDirectory() {
+        return getDirectory("query");
     }
 
     public String getPriceDirectory() {
-        return mainPath + "\\price";
+        return getDirectory("price");
     }
 
-    private String getUnikoFileFromDirectory(String path) {
-        File directory = new File(path);
+    public String getOutputDirectory() {
+        return getDirectory("output");
+    }
+
+    public String getUnikoQueryStorageDirectory() {
+        return getDirectory("query" + separator + "storage");
+    }
+
+    private String getDirectory(String path) {
+        Path directory = Path.of(mainPath + separator + path);
+        if (!Files.exists(directory)) {
+            try {
+                Files.createDirectory(directory);
+                log.info(String.format("create \"%s\" directory", path));
+            } catch (IOException e) {
+                log.warning(String.format("Can not create \"%s\" directory", path));
+                throw new RuntimeException(e);
+            }
+        }
+        return directory.toString();
+    }
+
+    public String getUnikoQueryFile() {
+        File directory = new File(getUnikoQueryDirectory());
         Optional<File> firstFile = Arrays.stream(Objects.requireNonNull(directory.listFiles())).findFirst();
 
         if (firstFile.isEmpty()) {
@@ -48,23 +75,18 @@ public class MyFileManager {
 
     public String getNewOutputFile() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy_HH-mm-ss");
-        String path = mainPath + "\\output\\order_" + LocalDateTime.now().format(formatter) + ".dbf";
+        String outputFileName = "order_" + LocalDateTime.now().format(formatter) + ".dbf";
+        Path path = Path.of(getOutputDirectory() + separator + outputFileName);
 
-        File directory = new File(mainPath, "output");
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-
-        File file = new File(path);
         try {
-            file.createNewFile();
+            Files.createFile(path);
+            log.info(String.format("Output file \"%s\" was created", path));
         } catch (IOException e) {
-            log.warning("Output file cannot be created");
+            log.warning(String.format("Output file \"%s\" cannot be created", path));
             throw new RuntimeException(e);
         }
 
-        log.info(String.format("Output file \"%s\" was created", path));
-        return file.toString();
+        return path.toString();
     }
 
     public static List<Path> getFileList(Path path) {
@@ -84,14 +106,38 @@ public class MyFileManager {
         return paths;
     }
 
-    public void moveToStorage(String absoluteFilePath) {
+    public void moveUnikoQueryToStorage(String absoluteFilePath) {
         Path src = Path.of(absoluteFilePath);
-        Path dest = Path.of(src.getParent() + "\\storage\\" + src.getFileName());
+        Path dest = Path.of(getUnikoQueryStorageDirectory() + separator + src.getFileName());
 
         try {
-            Files.move(src, dest,  StandardCopyOption.REPLACE_EXISTING);
+            Files.move(src, dest, StandardCopyOption.REPLACE_EXISTING);
+            log.info(String.format("File was moved from=%s to=%s", src, dest));
         } catch (IOException e) {
+            log.warning(String.format("Can not move file from=%s to=%s", src, dest));
             throw new RuntimeException(e);
         }
+    }
+
+    public void writeUserQueryFile(MultipartFile file) {
+        String name = file.getOriginalFilename();
+
+        if (file.isEmpty() || name == null) {
+            log.warning("user-query-file is empty");
+            throw new WrongFileException("No file");
+        } else if (!name.toLowerCase(Locale.ROOT).endsWith(".dbf")) {
+            log.warning("user-query-file has wrong file format");
+            throw new WrongFileException("Wrong file format");
+        }
+
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(getUnikoQueryDirectory() + File.separator + name)))) {
+            byte[] bytes = file.getBytes();
+            bos.write(bytes);
+            bos.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        log.info("user-query-file was wrote successfully");
     }
 }

@@ -60,6 +60,7 @@ public class UnikoLecItemService {
         unikoLecItemRepository.truncateTable();
         unikoLecItemRepository.restartSequence();
         unikoLecItemRepository.saveAll(newQuery);
+        importer.moveUnikoQueryToStorage();
         log.info("uniko query was import successfully");
     }
 

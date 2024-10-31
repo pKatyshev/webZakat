@@ -31,7 +31,7 @@ public class Importer {
     }
 
     public List<UnikoLecItem> importUnikoQuery() {
-        String path = myFileManager.getUnikoQueryPath();
+        String path = myFileManager.getUnikoQueryFile();
         Charset charset = Charset.forName("windows-1251");
         List<UnikoLecItem> unikoLecItems = new ArrayList<>();
 
@@ -61,7 +61,6 @@ public class Importer {
             log.warning("Error reading request file");
             throw new ImporterException(String.format("file cannot be read. File: %s", path.toString()));
         }
-        myFileManager.moveToStorage(path);
 
         Collections.sort(unikoLecItems);
 
@@ -129,4 +128,7 @@ public class Importer {
         return item;
     }
 
+    public void moveUnikoQueryToStorage() {
+        myFileManager.moveUnikoQueryToStorage(myFileManager.getUnikoQueryFile());
+    }
 }
