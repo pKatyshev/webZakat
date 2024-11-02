@@ -10,12 +10,12 @@
 <body>
 <header class="header">
     <div class="nav-bar">
-        <a class="nav-button app-name-link" href="http://localhost:3033">Web Zakat</a>
+        <a class="nav-button app-name-link" href="/">Web Zakat</a>
         <div class="dropdown nav-button">
             <a class="dropbtn">Импорт ▾</a>
             <div class="dropdown-content">
-                <a href="/import/prices">Импортировать прайс-листы</a>
-                <a href="/import/query">Импортировать заявку</a>
+                <a id="import-price-button"href="/import/prices">Импортировать прайс-листы</a>
+                <a id="import-query-button" href="/import/query">Импортировать заявку</a>
             </div>
         </div>
         <div class="dropdown nav-button">
@@ -23,7 +23,7 @@
             <div class="dropdown-content">
                 <a href="/zakaz/next">Обработка заявки</a>
                 <a href="/">Показать заявку</a>
-                <a href="/clear_query">Удалить заявку</a>
+                <a id="delete-query-button" href="/clear_query">Удалить заявку</a>
             </div>
         </div>
         <a class="nav-button" href="/price/show">Сводный прайс-лист</a>
