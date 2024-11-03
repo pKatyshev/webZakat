@@ -9,12 +9,12 @@
 </head>
 <body class="body">
 <header class="header">
-    <div  class="nav-bar">
+    <div class="nav-bar">
         <a class="nav-button app-name-link" href="/">Web Zakat</a>
         <div class="dropdown nav-button">
             <a class="dropbtn">Импорт ▾</a>
             <div class="dropdown-content">
-                <a id="import-price-button"href="/import/prices">Импортировать прайс-листы</a>
+                <a id="import-price-button" href="/import/prices">Импортировать прайс-листы</a>
                 <a id="import-query-button" href="/import/query">Импортировать заявку</a>
             </div>
         </div>
@@ -49,7 +49,8 @@
         <div class="manual-search">
             <form action="/zakaz/user_request">
                 <div class="form-row">
-                    <input id="search-input-field" onFocus="this.select()" type="text" name="request" class="field" required minlength="2" th:value="${dto.request}"/>
+                    <input id="search-input-field" onFocus="this.select()" type="text" name="request" class="field"
+                           required minlength="2" th:value="${dto.request}"/>
                 </div>
                 <input type="hidden" name="position" th:value="${dto.position}"/>
                 <div class="form-row">
@@ -91,6 +92,20 @@
         </table>
     </div>
 </main>
+<div id="preloader-block" class="hidden">
+    <div id="preload-content" class="preloader">
+        <div id="floatBarsG">
+            <div id="floatBarsG_1" class="floatBarsG"></div>
+            <div id="floatBarsG_2" class="floatBarsG"></div>
+            <div id="floatBarsG_3" class="floatBarsG"></div>
+            <div id="floatBarsG_4" class="floatBarsG"></div>
+            <div id="floatBarsG_5" class="floatBarsG"></div>
+            <div id="floatBarsG_6" class="floatBarsG"></div>
+            <div id="floatBarsG_7" class="floatBarsG"></div>
+            <div id="floatBarsG_8" class="floatBarsG"></div>
+        </div>
+    </div>
+</div>
 <script src="/script/jquery.js"></script>
 <script src="/script/zakatScript.js"></script>
 </body>
