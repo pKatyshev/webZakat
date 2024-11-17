@@ -39,12 +39,7 @@ public class DbfExporter implements Exporter{
                 rowData[5] = item.getQntPack();
                 rowData[6] = item.getEan13();
                 rowData[7] = item.getNds();
-
-//                SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-//                formatter.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-//                Date date = formatter.parse(item.getgDate());
-//                rowData[8] = date;
-
+                rowData[8] = item.getGDate();
                 rowData[9] = item.getQuantity();
                 rowData[10] = 1;
                 rowData[11] = item.getPrice();

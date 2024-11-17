@@ -110,11 +110,7 @@ public class Importer {
         item.setQntPack(Integer.parseInt(rowObj[5].toString()));
         item.setEan13(rowObj[6].toString());
         item.setNds(Double.parseDouble(rowObj[7].toString()));
-        try {
-            item.setGDate(rowObj[8].toString());
-        } catch (NullPointerException e) {
-            item.setGDate("unavailable date");
-        }
+        item.setGDate((Date) rowObj[8]);
         String quantityToInt = rowObj[9].toString();
         String newString = quantityToInt.replaceAll("\\.00", "");
         try {
@@ -122,6 +118,7 @@ public class Importer {
         } catch (Exception e) {
             item.setQuantity(Integer.parseInt(quantityToInt.replaceAll("\\.0", "")));
         }
+        item.setGnvlp(new BigDecimal(rowObj[10].toString()).intValue() == 1);
         item.setPrice(new BigDecimal(rowObj[11].toString()));
         item.setMark(Integer.parseInt(rowObj[12].toString()));
 

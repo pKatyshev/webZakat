@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,8 +25,9 @@ public class PriceItem {
     private int qntPack;
     private String ean13;
     private double nds;
-    private String gDate;
+    private Date gDate;
     private int quantity;
+    private boolean gnvlp;
     private BigDecimal price;
     private int mark;
     private int inOrder;

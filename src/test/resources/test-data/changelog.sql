@@ -306,3 +306,10 @@ INSERT INTO public.price_item (id, dist, code_pst, name, mnn, country, manufactu
 INSERT INTO public.price_item (id, dist, code_pst, name, mnn, country, manufacturer, qnt_pack, ean13, nds, g_date, quantity, price, mark, in_order) VALUES (25987, 'Пульс.dbf', '49242_2', 'Антигриппин-Экспресс пор д/приг р-ра д/внут прим (малина) пак 13,1 г х9', '', 'Россия', 'ФармВилар', 30, '', 10, 'Wed Nov 01 00:00:00 MSK 2023', 1, 338.25, 1, 0);
 INSERT INTO public.price_item (id, dist, code_pst, name, mnn, country, manufacturer, qnt_pack, ean13, nds, g_date, quantity, price, mark, in_order) VALUES (25988, 'Пульс.dbf', '65698', 'Антигриппин-Экспресс пор д/приг р-ра д/внут прим (черн. смородина) пак 13,1 г х9', 'Парацетамол+Фенирамин+Аскорбиновая кислота', 'Россия', 'Санкт-Петербургская ФФ ОАО (ГаленоФарм)', 30, '4605964006462', 10, 'Thu Feb 01 00:00:00 MSK 2024', 4, 197.00, 1, 0);
 INSERT INTO public.price_item (id, dist, code_pst, name, mnn, country, manufacturer, qnt_pack, ean13, nds, g_date, quantity, price, mark, in_order) VALUES (25989, 'Пульс.dbf', '61196_4', 'Антистен МВ табл с пролонг высв п/о плен 35 мг х60', '', 'Россия', 'Озон', 30, '', 10, 'Wed Feb 01 00:00:00 MSK 2023', 2, 324.52, 0, 0);
+
+-- changeset katyshev:alter-table-price_item
+ALTER TABLE price_item DROP COLUMN g_date;
+ALTER TABLE price_item ADD COLUMN g_date DATE;
+
+-- changeset katyshev:alter-table-price_item-add-gnvlp
+ALTER TABLE price_item ADD COLUMN gnvlp boolean

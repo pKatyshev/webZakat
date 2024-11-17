@@ -76,3 +76,20 @@ document.getElementById("delete-query-button").addEventListener("click", functio
         event.stopPropagation();
     }
 });
+
+document.getElementById("zakazTable").onclick = function (event) {
+    let target = event.target.parentNode.children[7].children[0].children[0];
+    target.innerHTML = "";
+    target.focus();
+}
+
+function countFieldFocused() {
+    event.target.select();
+    let target = event.target.parentNode.parentNode.parentNode;
+    target.classList.add("focused-table-row");
+}
+
+function countFieldBlur() {
+    let target = event.target.parentNode.parentNode.parentNode;
+    target.classList.remove("focused-table-row");
+}

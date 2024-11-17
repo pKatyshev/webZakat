@@ -64,3 +64,10 @@ CREATE TABLE user_request
 
 -- changeset katyshev:editUserRequestTable
 ALTER TABLE user_request ADD PRIMARY KEY (order_group_id);
+
+-- changeset katyshev:alter-table-price_item
+ALTER TABLE price_item DROP COLUMN g_date;
+ALTER TABLE price_item ADD COLUMN g_date DATE;
+
+-- changeset katyshev:alter-table-price_item-add-gnvlp
+ALTER TABLE price_item ADD COLUMN gnvlp boolean

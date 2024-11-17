@@ -60,10 +60,11 @@
         </div>
     </div>
     <div class="price-table">
-        <table th:if="${not dto.priceItemList.isEmpty}">
+        <table id="zakazTable" th:if="${not dto.priceItemList.isEmpty}">
             <tr>
                 <th width="100%">Наименование</th>
                 <th>Производитель</th>
+                <th>ЖВ</th>
                 <th>Поставщик</th>
                 <th width="50">НДС</th>
                 <th>Остаток</th>
@@ -71,17 +72,18 @@
                 <th>В заявке</th>
                 <th>Сумма</th>
             </tr>
-            <tr th:each="item : ${dto.priceItemList}" th:class="${item.getInOrder() > 0} ? ordered-table-row">
+            <tr th:each="item, iStat : ${dto.priceItemList}" th:id="'ptablerow' + ${iStat.index}" class="ptablerow" th:classappend="${item.getInOrder() > 0} ? ordered-table-row">
                 <td th:text="${item.getName()}"></td>
                 <td th:text="${item.getManufacturer()}"></td>
+                <td align="center" th:text="${item.isGnvlp()} ? '&#9745'"></td>
                 <td th:text="${item.getDist()}"></td>
                 <td th:text="${item.getNds()}"></td>
                 <td th:text="${item.getQuantity()}"></td>
                 <td th:text="${item.getPrice()}"></td>
                 <td>
                     <form action="/zakaz/user_add">
-                        <input class="user-count" id="count_field" type="text" name="count"
-                               th:value="${item.getInOrder()}" size="4"/>
+                        <input class="user-count" id="count_field" type="text" name="count" onFocus="countFieldFocused()" onblur="countFieldBlur()"
+                               th:value="${item.getInOrder() == 0} ? '' : ${item.getInOrder()}" size="4"/>
                         <input type="hidden" name="position" th:value="${dto.position}"/>
                         <input type="hidden" name="id" th:value="${item.getId()}"/>
                         <input type="hidden" name="request" th:value="${dto.request}"/>

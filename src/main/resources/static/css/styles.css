@@ -258,6 +258,10 @@ tr:hover {
     background-color: #efefef;
 }
 
+.focused-table-row {
+    background-color: #e0e0e0;
+}
+
 .user-count {
     border: 1px solid #ffffff;
 }
