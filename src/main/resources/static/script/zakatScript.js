@@ -9,11 +9,6 @@
     setTimeout( () => {document.location.reload();}, 300)
 }
 
-const preloader = document.getElementById("preloader-block");
-if (preloader != null) {
-    preloader.hidden = true;
-}
-
 document.addEventListener("keydown", function (event) {
     if (event.ctrlKey && event.key === "ArrowRight") {
         document.getElementById("down-button").click();
@@ -25,55 +20,6 @@ document.addEventListener("keydown", function (event) {
 
     if (event.key === "Escape") {
         document.getElementById("search-input-field").focus();
-    }
-});
-
-document.getElementById("import-query-button").addEventListener("click", function (event) {
-    if (!confirm("Вы хотите импортировать заякву?")) {
-        return
-    }
-
-    event.preventDefault()
-    event.stopPropagation();
-
-    document.getElementById("preloader-block").hidden = false;
-
-    $.get("/import/query-ajax", {}, function (data) {
-        if (data.status === "good") {
-            alert("Заявка загружена!");
-            location.reload();
-        } else {
-            alert(data.status);
-            document.getElementById("preloader-block").hidden = true;
-        }
-    });
-});
-
-document.getElementById("import-price-button").addEventListener("click", function (event) {
-    if (!confirm("Вы хотите импортировать прайс-листы?")) {
-        return
-    }
-
-    event.preventDefault()
-    event.stopPropagation();
-
-    document.getElementById("preloader-block").hidden = false;
-
-    $.get("/import/prices-ajax", {}, function (data) {
-        if (data.status === "good") {
-            alert("Прайс-листы загружены!");
-            location.reload();
-        } else {
-            alert(data.status);
-            document.getElementById("preloader-block").hidden = true;
-        }
-    });
-});
-
-document.getElementById("delete-query-button").addEventListener("click", function (event) {
-    if (!confirm("Вы хотите удалить заякву?")) {
-        event.preventDefault()
-        event.stopPropagation();
     }
 });
 
@@ -93,3 +39,23 @@ function countFieldBlur() {
     let target = event.target.parentNode.parentNode.parentNode;
     target.classList.remove("focused-table-row");
 }
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+
+        let elementId = document.activeElement.id;
+        let nextId;
+
+        if (elementId.startsWith("count_field_")) {
+            let iterator = elementId.replace("count_field_", "");
+            if (event.key === "ArrowDown") {
+                nextId = "count_field_" + (++iterator);
+            } else {
+                nextId = "count_field_" + (--iterator);
+            }
+            document.getElementById(nextId).focus();
+        } else {
+            document.getElementById("count_field_0").focus();
+        }
+    }
+})

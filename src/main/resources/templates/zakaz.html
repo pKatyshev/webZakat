@@ -82,7 +82,7 @@
                 <td th:text="${item.getPrice()}"></td>
                 <td>
                     <form action="/zakaz/user_add">
-                        <input class="user-count" id="count_field" type="text" name="count" onFocus="countFieldFocused()" onblur="countFieldBlur()"
+                        <input class="user-count" th:id="'count_field_' + ${iStat.index}" th:tabindex="${iStat.index}" type="text" name="count" onFocus="countFieldFocused()" onblur="countFieldBlur()"
                                th:value="${item.getInOrder() == 0} ? '' : ${item.getInOrder()}" size="4"/>
                         <input type="hidden" name="position" th:value="${dto.position}"/>
                         <input type="hidden" name="id" th:value="${item.getId()}"/>
@@ -110,5 +110,6 @@
 </div>
 <script src="/script/jquery.js"></script>
 <script src="/script/zakatScript.js"></script>
+<script src="/script/menuScript.js"></script>
 </body>
 </html>
