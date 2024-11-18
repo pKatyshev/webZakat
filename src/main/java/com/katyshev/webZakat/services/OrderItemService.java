@@ -2,6 +2,7 @@ package com.katyshev.webZakat.services;
 
 import com.katyshev.webZakat.models.OrderItem;
 import com.katyshev.webZakat.models.PriceItem;
+import com.katyshev.webZakat.models.custom.DistrSum;
 import com.katyshev.webZakat.repositories.OrderItemRepository;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
 import com.katyshev.webZakat.utils.Exporter;
@@ -116,6 +117,10 @@ public class OrderItemService {
         archiveItemService.saveOrder(orderItemList);
         orderItemRepository.truncateTable();
         priceItemRepository.clearInOrderColumn();
+    }
+
+    public List<DistrSum> getDistrSumList() {
+        return priceItemRepository.totalSummaryByDistr();
     }
 }
 

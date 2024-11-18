@@ -1,5 +1,6 @@
 package com.katyshev.webZakat.repositories;
 
+import com.katyshev.webZakat.models.custom.DistrSum;
 import com.katyshev.webZakat.models.PriceItem;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,4 +32,7 @@ public interface PriceItemRepository extends JpaRepository<PriceItem, Integer>  
 
     @Query(value ="SELECT SUM(price * in_order) FROM price_item WHERE in_order > 0", nativeQuery = true)
     Optional<BigDecimal> getTotalAmount();
+
+    @Query("SELECT new com.katyshev.webZakat.models.custom.DistrSum(pi.dist, SUM(pi.price * pi.inOrder)) FROM PriceItem AS pi group by pi.dist")
+    List<DistrSum> totalSummaryByDistr();
 }

@@ -40,12 +40,13 @@
 <br>
 <table th:if="${not list.isEmpty}" border="1">
     <tr>
-        <th>Наименование</th>
-        <th>Кол-во</th>
+        <th width="400">Наименование</th>
+        <th width="50">Кол-во</th>
+        <th width="50"></th>
     </tr>
-    <tr th:each="item, iStat : ${list}">
+    <tr th:each="item, iStat : ${list}" th:class="${item.getOrdered() > 0} ? ordered-table-row">
         <td th:id="'rowNumber-' + ${iStat.index}">
-            <a th:href="'/zakaz/next?position=' + ${iStat.index + 1}" th:text="${item.getName()}"></a>
+            <a th:href="'/zakaz/next?position=' + ${item.getId()}" th:text="${item.getName()}"></a>
         </td>
         <td th:text="${item.getQuantity()}"></td>
         <td>

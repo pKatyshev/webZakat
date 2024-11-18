@@ -4,7 +4,7 @@ if (preloader != null) {
 }
 
 document.getElementById("import-query-button").addEventListener("click", function (event) {
-    if (!confirm("Вы хотите импортировать заякву?")) {
+    if (!confirm("Р’С‹ С…РѕС‚РёС‚Рµ РёРјРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ Р·Р°СЏРєРІСѓ?")) {
         return
     }
 
@@ -15,7 +15,7 @@ document.getElementById("import-query-button").addEventListener("click", functio
 
     $.get("/import/query-ajax", {}, function (data) {
         if (data.status === "good") {
-            alert("Заявка загружена!");
+            alert("Р—Р°СЏРІРєР° Р·Р°РіСЂСѓР¶РµРЅР°!");
             location.reload();
         } else {
             alert(data.status);
@@ -25,7 +25,7 @@ document.getElementById("import-query-button").addEventListener("click", functio
 });
 
 document.getElementById("import-price-button").addEventListener("click", function (event) {
-    if (!confirm("Вы хотите импортировать прайс-листы?")) {
+    if (!confirm("Р’С‹ С…РѕС‚РёС‚Рµ РёРјРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ РїСЂР°Р№СЃ-Р»РёСЃС‚С‹?")) {
         return
     }
 
@@ -36,7 +36,7 @@ document.getElementById("import-price-button").addEventListener("click", functio
 
     $.get("/import/prices-ajax", {}, function (data) {
         if (data.status === "good") {
-            alert("Прайс-листы загружены!");
+            alert("РџСЂР°Р№СЃ-Р»РёСЃС‚С‹ Р·Р°РіСЂСѓР¶РµРЅС‹!");
             location.reload();
         } else {
             alert(data.status);
@@ -46,7 +46,7 @@ document.getElementById("import-price-button").addEventListener("click", functio
 });
 
 document.getElementById("delete-query-button").addEventListener("click", function (event) {
-    if (!confirm("Вы хотите удалить заякву?")) {
+    if (!confirm("Р’С‹ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ Р·Р°СЏРєРІСѓ?")) {
         event.preventDefault()
         event.stopPropagation();
     }

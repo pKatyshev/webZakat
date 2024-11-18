@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Log
 @Service
@@ -46,7 +43,9 @@ public class UnikoLecItemService {
     }
 
     public List<UnikoLecItem> findAll() {
-        return unikoLecItemRepository.findAll();
+        List<UnikoLecItem> lecItems = unikoLecItemRepository.findAll();
+        Collections.sort(lecItems);
+        return lecItems;
     }
 
     @Transactional
@@ -155,5 +154,10 @@ public class UnikoLecItemService {
     public UnikoLecItem findById(int id) {
         Optional<UnikoLecItem> unikoItem = unikoLecItemRepository.findById(id);
         return unikoItem.orElseThrow();
+    }
+
+    public void setOrdered(int position, int count) {
+        UnikoLecItem item = findById(position);
+        item.setOrdered(count);
     }
 }

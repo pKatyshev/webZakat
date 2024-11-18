@@ -25,6 +25,7 @@ public class OrderController {
     @GetMapping("/show")
     public String index(Model model) {
         model.addAttribute("list", orderItemService.findAll());
+        model.addAttribute("distrs", orderItemService.getDistrSumList());
         return "order";
     }
 
@@ -39,6 +40,7 @@ public class OrderController {
         priceItemService.setInOrder(priceItemId, count);
 
         model.addAttribute("list", orderItemService.findAll());
+        model.addAttribute("distrs", orderItemService.getDistrSumList());
         return "order";
     }
 
@@ -50,6 +52,7 @@ public class OrderController {
         priceItemService.setInOrder(priceItemId, 0);
 
         model.addAttribute("list", orderItemService.findAll());
+        model.addAttribute("distrs", orderItemService.getDistrSumList());
         return "order";
     }
 

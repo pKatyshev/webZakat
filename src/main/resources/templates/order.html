@@ -31,6 +31,16 @@
     </div>
 </header>
 <div class="empty-block"></div>
+<table class="dist-table">
+<!--    <tr>-->
+<!--    <th width="60%">Поставщик</th>-->
+<!--    <th >Сумма</th>-->
+<!--    </tr>-->
+    <tr th:each="dist : ${distrs}">
+        <td th:text="${dist.getDist()}"></td>
+        <td th:text="${dist.getSum()}"></td>
+    </tr>
+</table>
 <hr>
 <table th:if="${not list.isEmpty}" border="1">
     <tr>

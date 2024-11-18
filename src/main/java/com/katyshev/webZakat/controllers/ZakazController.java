@@ -75,6 +75,7 @@ public class ZakazController {
 
         orderItemService.save(priceItemId, count);
         priceItemService.setInOrder(priceItemId, count);
+        unikoLecItemService.setOrdered(position, count);
 
         UiDTO uiDTO = unikoLecItemService.nextRequest(position, progRequest, true);
 

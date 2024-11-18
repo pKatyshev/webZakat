@@ -225,10 +225,16 @@ a.nav-button:hover {
     font-size: 14px;
 }
 
-
+.dist-table {
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 15px;
+    font-weight: bold;
+}
 
 /*      main table      */
 table {
+    margin-left: 10px;
     border-spacing: 0;
     border: 1px solid black;
     border-collapse: collapse;
@@ -246,6 +252,7 @@ th, td {
 }
 
 .price-table {
+    font-size: 13px;
     margin-top: 180px;
 }
 
