@@ -35,4 +35,7 @@ public interface PriceItemRepository extends JpaRepository<PriceItem, Integer>  
 
     @Query("SELECT new com.katyshev.webZakat.models.custom.DistrSum(pi.dist, SUM(pi.price * pi.inOrder)) FROM PriceItem AS pi group by pi.dist")
     List<DistrSum> totalSummaryByDistr();
+
+    @Query(value="SELECT dist FROM price_item WHERE in_order > 0", nativeQuery = true)
+    List<String> findDistinctByPriceItem_Dist();
 }

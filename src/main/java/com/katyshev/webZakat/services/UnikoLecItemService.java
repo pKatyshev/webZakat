@@ -8,6 +8,7 @@ import com.katyshev.webZakat.models.UserRequest;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
 import com.katyshev.webZakat.repositories.UnikoLecItemRepository;
 import com.katyshev.webZakat.utils.Engine;
+import com.katyshev.webZakat.utils.FileManager;
 import com.katyshev.webZakat.utils.Importer;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ public class UnikoLecItemService {
     private final UnikoLecItemRepository unikoLecItemRepository;
     private final PriceItemRepository priceItemRepository;
     private final UserRequestService userRequestService;
+    private final FileManager fileManager;
     private final Importer importer;
     private final Engine engine;
 
@@ -33,11 +35,12 @@ public class UnikoLecItemService {
     public UnikoLecItemService(UnikoLecItemRepository unikoLecItemRepository,
                                PriceItemRepository priceItemRepository,
                                UserRequestService userRequestService,
-                               Importer importer,
+                               FileManager fileManager, Importer importer,
                                Engine engine) {
         this.unikoLecItemRepository = unikoLecItemRepository;
         this.priceItemRepository = priceItemRepository;
         this.userRequestService = userRequestService;
+        this.fileManager = fileManager;
         this.importer = importer;
         this.engine = engine;
     }
@@ -59,7 +62,7 @@ public class UnikoLecItemService {
         unikoLecItemRepository.truncateTable();
         unikoLecItemRepository.restartSequence();
         unikoLecItemRepository.saveAll(newQuery);
-        importer.moveUnikoQueryToStorage();
+        fileManager.moveUnikoQueryToStorage();
         log.info("uniko query was import successfully");
     }
 
@@ -115,6 +118,7 @@ public class UnikoLecItemService {
             }
         }
 
+        uiDTO.setRequestCount(unikoItem.getQuantity());
         uiDTO.setPosition(unikoItem.getId());
         uiDTO.setName(unikoItem.getName());
         uiDTO.setPriceItemList(list);
@@ -156,6 +160,7 @@ public class UnikoLecItemService {
         return unikoItem.orElseThrow();
     }
 
+    @Transactional
     public void setOrdered(int position, int count) {
         UnikoLecItem item = findById(position);
         item.setOrdered(count);

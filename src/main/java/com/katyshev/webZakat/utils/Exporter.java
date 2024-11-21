@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface Exporter {
     void exportOrder(List<PriceItem> order);
+
+    void exportOrder(List<PriceItem> order, List<String> distributors);
 }

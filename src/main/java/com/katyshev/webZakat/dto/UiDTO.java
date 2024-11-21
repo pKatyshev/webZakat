@@ -15,4 +15,5 @@ public class UiDTO {
     private List<PriceItem> priceItemList;
     private String request;
     private BigDecimal totalAmount;
+    private float requestCount;
 }

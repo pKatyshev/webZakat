@@ -2,7 +2,7 @@ package com.katyshev.webZakat.controllers;
 
 import com.katyshev.webZakat.exceptions.WrongFileException;
 import com.katyshev.webZakat.services.UnikoLecItemService;
-import com.katyshev.webZakat.utils.MyFileManager;
+import com.katyshev.webZakat.utils.FileManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,17 +14,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadController {
 
     private final UnikoLecItemService unikoLecItemService;
-    private final MyFileManager myFileManager;
+    private final FileManager fileManager;
 
-    public UploadController(UnikoLecItemService unikoLecItemService, MyFileManager myFileManager) {
+    public UploadController(UnikoLecItemService unikoLecItemService, FileManager fileManager) {
         this.unikoLecItemService = unikoLecItemService;
-        this.myFileManager = myFileManager;
+        this.fileManager = fileManager;
     }
 
 
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file) {
-        myFileManager.writeUserQueryFile(file);
+        fileManager.writeUserQueryFile(file);
         unikoLecItemService.importNewUnikoQuery();
         return "redirect:/";
     }

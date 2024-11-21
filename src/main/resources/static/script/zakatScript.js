@@ -59,3 +59,30 @@ document.addEventListener("keydown", function (event) {
         }
     }
 })
+
+document.getElementById("zakazTable").addEventListener("dblclick", function (event) {
+    let countString = document.getElementById("in-request-count-text").innerText;
+    let count = countString.substring(10);
+
+    let pos = document.activeElement.parentNode.children[1].getAttribute("value")
+    let priceItemId = document.activeElement.parentNode.children[2].getAttribute("value")
+
+    const userAddForm = {
+        "position": pos,
+        "priceItemId": priceItemId,
+        "countStr": parseInt(count)
+    };
+
+    $.ajax({
+        url: "/zakaz/user_add-ajax",
+        method: 'post',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(userAddForm),
+        success: function(data){
+            location.reload();
+        }
+    });
+
+    console.log(document.activeElement);
+})

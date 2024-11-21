@@ -1,6 +1,5 @@
 package com.katyshev.webZakat.utils;
 
-
 import com.katyshev.webZakat.exceptions.FileNotFoundException;
 import com.katyshev.webZakat.exceptions.WrongFileException;
 import lombok.extern.java.Log;
@@ -20,27 +19,17 @@ import java.util.*;
 
 @Log
 @Component
-public class MyFileManager {
+public class FileManager {
+
     @Value("${io_Directory}")
     private String mainPath;
-    private final String separator = File.separator;
 
-    public static List<File> getFileList(String path) {
-        File file = new File(path);
-        File[] files = file.listFiles();
-        return Arrays.asList(files);
-    }
+    @Value("${eprica_exchange_directory}")
+    private String epricaPath;
+    private final String separator = File.separator;
 
     public String getUnikoQueryDirectory() {
         return getDirectory("query");
-    }
-
-    public String getPriceDirectory() {
-        return getDirectory("price");
-    }
-
-    public String getOutputDirectory() {
-        return getDirectory("output");
     }
 
     public String getUnikoQueryStorageDirectory() {
@@ -73,50 +62,25 @@ public class MyFileManager {
         return firstFile.get().toString();
     }
 
-    public String getNewOutputFile() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy_HH-mm-ss");
-        String outputFileName = "order_" + LocalDateTime.now().format(formatter) + ".dbf";
-        Path path = Path.of(getOutputDirectory() + separator + outputFileName);
+    public List<Path> getPricesPaths() {
+        Path epricaDir = Path.of(epricaPath);
+        List<Path> result = new ArrayList<>();
 
         try {
-            Files.createFile(path);
-            log.info(String.format("Output file \"%s\" was created", path));
+            Files.walkFileTree(epricaDir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    if (file.getParent().getFileName().toString().equals("Price")
+                    && file.toString().endsWith(".dbf")) {
+                        result.add(file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
         } catch (IOException e) {
-            log.warning(String.format("Output file \"%s\" cannot be created", path));
             throw new RuntimeException(e);
         }
-
-        return path.toString();
-    }
-
-    public static List<Path> getFileList(Path path) {
-        List<Path> paths = new ArrayList<>();
-        class MyFileVisitor extends SimpleFileVisitor<Path> {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                paths.add(file);
-                return FileVisitResult.CONTINUE;
-            }
-        }
-        try {
-            Files.walkFileTree(path, new MyFileVisitor());
-        } catch (IOException e) {
-            log.warning(String.format("Error reading files from directory: %s", path.toString()));
-        }
-        return paths;
-    }
-
-    public void moveUnikoQueryToStorage(String absoluteFilePath) {
-        Path src = Path.of(absoluteFilePath);
-        Path dest = Path.of(getUnikoQueryStorageDirectory() + separator + src.getFileName());
-
-        try {
-            Files.move(src, dest, StandardCopyOption.REPLACE_EXISTING);
-            log.info(String.format("File was moved from=%s to=%s", src, dest));
-        } catch (IOException e) {
-            log.warning(String.format("Can not move file from=%s to=%s", src, dest));
-            throw new RuntimeException(e);
-        }
+        return result;
     }
 
     public void writeUserQueryFile(MultipartFile file) {
@@ -140,4 +104,42 @@ public class MyFileManager {
 
         log.info("user-query-file was wrote successfully");
     }
+
+    public void moveUnikoQueryToStorage() {
+        Path src = Path.of(getUnikoQueryFile());
+        Path dest = Path.of(getUnikoQueryStorageDirectory() + separator + src.getFileName());
+
+        try {
+            Files.move(src, dest, StandardCopyOption.REPLACE_EXISTING);
+            log.info(String.format("File was moved from=%s to=%s", src, dest));
+        } catch (IOException e) {
+            log.warning(String.format("Can not move file from=%s to=%s", src, dest));
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Path getOrderFileByDistributor(String distributor) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy_HH-mm-ss");
+            String outputFileName = "ordr_" + LocalDateTime.now().format(formatter) + ".dbf";
+            Path path = Path.of(getOutputDirectory(distributor) + separator + outputFileName);
+
+            try {
+                Files.createFile(path);
+                log.info(String.format("Output file \"%s\" was created", path));
+            } catch (IOException e) {
+                log.warning(String.format("Output file \"%s\" cannot be created", path));
+                throw new RuntimeException(e);
+            }
+            return path;
+    }
+
+    private String getOutputDirectory(String distributor) {
+        return epricaPath +
+                separator +
+                distributor +
+                separator +
+                "Orders" +
+                separator;
+    }
 }
+

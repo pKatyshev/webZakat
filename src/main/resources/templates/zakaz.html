@@ -44,6 +44,7 @@
                    th:href="@{/zakaz/previous?position={ident}(ident=${dto.position - 1})}">Предыдущий</a>
                 <a id="down-button" class="auto-search-nav-button"
                    th:href="@{/zakaz/next?position={ident}(ident=${dto.position + 1})}">Следующий</a>
+                <p th:text="'В заявке: ' + ${dto.requestCount}" id="in-request-count-text" class="in-request-count-text"></p>
             </div>
         </div>
         <div class="manual-search">

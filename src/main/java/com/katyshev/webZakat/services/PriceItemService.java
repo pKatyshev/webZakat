@@ -3,7 +3,7 @@ package com.katyshev.webZakat.services;
 import com.katyshev.webZakat.models.PriceItem;
 import com.katyshev.webZakat.repositories.CustomPriceItemRepository;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
-import com.katyshev.webZakat.utils.Importer;
+import com.katyshev.webZakat.utils.DBFImporter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,12 +21,12 @@ public class PriceItemService {
 
     private final PriceItemRepository priceItemRepository;
     private final CustomPriceItemRepository customPriceItemRepository;
-    private final Importer importer;
+    private final DBFImporter importer;
 
     @Autowired
     public PriceItemService(PriceItemRepository priceItemRepository,
                             CustomPriceItemRepository customPriceItemRepository,
-                            Importer importer) {
+                            DBFImporter importer) {
 
         this.priceItemRepository = priceItemRepository;
         this.customPriceItemRepository = customPriceItemRepository;

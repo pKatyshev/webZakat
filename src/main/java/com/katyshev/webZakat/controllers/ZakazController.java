@@ -1,16 +1,17 @@
 package com.katyshev.webZakat.controllers;
 
+import com.katyshev.webZakat.dto.ServerResponse;
 import com.katyshev.webZakat.dto.UiDTO;
+import com.katyshev.webZakat.dto.UserAddForm;
 import com.katyshev.webZakat.services.OrderItemService;
 import com.katyshev.webZakat.services.PriceItemService;
 import com.katyshev.webZakat.services.UnikoLecItemService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 
 @Log
@@ -81,5 +82,22 @@ public class ZakazController {
 
         model.addAttribute("dto", uiDTO);
         return "zakaz";
+    }
+
+    @PostMapping("/user_add-ajax")
+    public @ResponseBody ServerResponse userAddAjax(@RequestBody UserAddForm userAddForm) {
+        int countStr = userAddForm.getCountStr();
+        int position = userAddForm.getPosition();
+        int priceItemId = userAddForm.getPriceItemId();
+
+        int count = priceItemService.validateCount(priceItemId, String.valueOf(countStr));
+        try {
+            orderItemService.save(priceItemId, count);
+            priceItemService.setInOrder(priceItemId, count);
+            unikoLecItemService.setOrdered(position, count);
+            return new ServerResponse("good");
+        } catch (Exception e) {
+            return new ServerResponse(e.getMessage());
+        }
     }
 }

@@ -48,7 +48,7 @@ public class OrderItemService {
         }
 
         PriceItem priceItem = priceItemRepository.findById(priceItemId).get();
-        List<OrderItem> alreadyInOrderList = orderItemRepository.findAll();;
+        List<OrderItem> alreadyInOrderList = orderItemRepository.findAll();
 
         for (OrderItem already : alreadyInOrderList) {
             if (already.getPriceItem().getId() == priceItemId) {
@@ -113,7 +113,7 @@ public class OrderItemService {
             s.setExportTime(LocalDateTime.now());
         });
 
-        exporter.exportOrder(orderExportList);
+        exporter.exportOrder(orderExportList, getDistributors());
         archiveItemService.saveOrder(orderItemList);
         orderItemRepository.truncateTable();
         priceItemRepository.clearInOrderColumn();
@@ -121,6 +121,10 @@ public class OrderItemService {
 
     public List<DistrSum> getDistrSumList() {
         return priceItemRepository.totalSummaryByDistr();
+    }
+
+    public List<String> getDistributors() {
+        return priceItemRepository.findDistinctByPriceItem_Dist();
     }
 }
 
