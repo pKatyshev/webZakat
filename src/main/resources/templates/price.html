@@ -14,7 +14,7 @@
         <div class="dropdown nav-button">
             <a class="dropbtn">Импорт ▾</a>
             <div class="dropdown-content">
-                <a id="import-price-button"href="/import/prices">Импортировать прайс-листы</a>
+                <a id="import-price-button" href="/import/prices">Импортировать прайс-листы</a>
                 <a id="import-query-button" href="/import/query">Импортировать заявку</a>
             </div>
         </div>
@@ -30,46 +30,70 @@
         <a class="nav-button" href="/order/show">Корзина</a>
     </div>
 </header>
-<div class="empty-block"></div>
-
-<table  border="1">
-    <tr>
-        <th>Наименование</th>
-        <th>Производитель</th>
-        <th>Поставщик</th>
-        <th>Кол-во</th>
-        <th>Цена</th>
-        <th>НДС</th>
-        <th>Страна</th>
-    </tr>
-    <tr th:each="item : ${priceList}">
-        <td th:text="${item.getName()}"></td>
-        <td th:text="${item.getManufacturer()}"></td>
-        <td th:text="${item.getDist()}"></td>
-        <td th:text="${item.getQuantity()}"></td>
-        <td th:text="${item.getPrice()}"></td>
-        <td th:text="${item.getNds()}"></td>
-        <td th:text="${item.getCountry()}"></td>
-        <td>
-            <a th:href="@{/delete_item?id={ident}(ident=${item.getId()})}">Удалить</a>
-        </td>
-    </tr>
-</table>
-<div id="preloader-block" class="hidden">
-    <div id="preload-content" class="preloader">
-        <div id="floatBarsG">
-            <div id="floatBarsG_1" class="floatBarsG"></div>
-            <div id="floatBarsG_2" class="floatBarsG"></div>
-            <div id="floatBarsG_3" class="floatBarsG"></div>
-            <div id="floatBarsG_4" class="floatBarsG"></div>
-            <div id="floatBarsG_5" class="floatBarsG"></div>
-            <div id="floatBarsG_6" class="floatBarsG"></div>
-            <div id="floatBarsG_7" class="floatBarsG"></div>
-            <div id="floatBarsG_8" class="floatBarsG"></div>
+<main>
+    <div class="search-panel">
+        <div class="manual-search-price">
+            <form action="/price/user_request">
+                <div class="form-row">
+                    <input id="search-input-field" onFocus="this.select()" type="text" name="request" class="field-price"
+                           required minlength="2" th:value="${dto.request}"/>
+                </div>
+                <div class="form-row">
+                    <input type="submit" value="Поиск" class="search-button">
+                </div>
+            </form>
         </div>
     </div>
-</div>
+    <div class="price-table">
+        <table id="zakazTable" th:if="${not dto.priceItemList.isEmpty}">
+            <tr>
+                <th width="100%">Наименование</th>
+                <th>Производитель</th>
+                <th>ЖВ</th>
+                <th>Поставщик</th>
+                <th width="50">НДС</th>
+                <th>Остаток</th>
+                <th width="100">Цена</th>
+                <th>В заявке</th>
+                <th>Сумма</th>
+            </tr>
+            <tr th:each="item, iStat : ${dto.priceItemList}" th:id="'ptablerow' + ${iStat.index}" class="ptablerow" th:classappend="${item.getInOrder() > 0} ? ordered-table-row">
+                <td th:text="${item.getName()}"></td>
+                <td th:text="${item.getManufacturer()}"></td>
+                <td align="center" th:text="${item.isGnvlp()} ? '&#9745'"></td>
+                <td th:text="${item.getDist()}"></td>
+                <td th:text="${item.getNds()}"></td>
+                <td th:text="${item.getQuantity()}"></td>
+                <td th:text="${item.getPrice()}"></td>
+                <td>
+                    <form action="/price/user_add">
+                        <input class="user-count" th:id="'count_field_' + ${iStat.index}" th:tabindex="${iStat.index}" type="text" name="count" onFocus="countFieldFocused()" onblur="countFieldBlur()"
+                               th:value="${item.getInOrder() == 0} ? '' : ${item.getInOrder()}" size="4"/>
+                        <input type="hidden" name="id" th:value="${item.getId()}"/>
+                        <input type="hidden" name="request" th:value="${dto.request}"/>
+                    </form>
+                </td>
+                <td th:text="${item.getInOrder() > 0} ? ${item.getPrice() * item.getInOrder()} : ''"></td>
+            </tr>
+        </table>
+    </div>
+    <div id="preloader-block" class="hidden">
+        <div id="preload-content" class="preloader">
+            <div id="floatBarsG">
+                <div id="floatBarsG_1" class="floatBarsG"></div>
+                <div id="floatBarsG_2" class="floatBarsG"></div>
+                <div id="floatBarsG_3" class="floatBarsG"></div>
+                <div id="floatBarsG_4" class="floatBarsG"></div>
+                <div id="floatBarsG_5" class="floatBarsG"></div>
+                <div id="floatBarsG_6" class="floatBarsG"></div>
+                <div id="floatBarsG_7" class="floatBarsG"></div>
+                <div id="floatBarsG_8" class="floatBarsG"></div>
+            </div>
+        </div>
+    </div>
+</main>
 <script src="/script/jquery.js"></script>
+<script src="/script/zakatScript.js"></script>
 <script src="/script/menuScript.js"></script>
 </body>
 </html>

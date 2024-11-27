@@ -7,9 +7,9 @@ import com.katyshev.webZakat.models.UnikoLecItem;
 import com.katyshev.webZakat.models.UserRequest;
 import com.katyshev.webZakat.repositories.PriceItemRepository;
 import com.katyshev.webZakat.repositories.UnikoLecItemRepository;
-import com.katyshev.webZakat.utils.Engine;
 import com.katyshev.webZakat.utils.FileManager;
 import com.katyshev.webZakat.utils.Importer;
+import com.katyshev.webZakat.utils.WordsWorker;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,23 +26,24 @@ public class UnikoLecItemService {
 
     private final UnikoLecItemRepository unikoLecItemRepository;
     private final PriceItemRepository priceItemRepository;
+    private final PriceItemService priceItemService;
     private final UserRequestService userRequestService;
+    private final WordsWorker wordsWorker;
     private final FileManager fileManager;
     private final Importer importer;
-    private final Engine engine;
 
     @Autowired
     public UnikoLecItemService(UnikoLecItemRepository unikoLecItemRepository,
                                PriceItemRepository priceItemRepository,
-                               UserRequestService userRequestService,
-                               FileManager fileManager, Importer importer,
-                               Engine engine) {
+                               PriceItemService priceItemService, UserRequestService userRequestService,
+                               WordsWorker wordsWorker, FileManager fileManager, Importer importer) {
         this.unikoLecItemRepository = unikoLecItemRepository;
         this.priceItemRepository = priceItemRepository;
+        this.priceItemService = priceItemService;
         this.userRequestService = userRequestService;
+        this.wordsWorker = wordsWorker;
         this.fileManager = fileManager;
         this.importer = importer;
-        this.engine = engine;
     }
 
     public List<UnikoLecItem> findAll() {
@@ -101,16 +102,16 @@ public class UnikoLecItemService {
             if (savedUserRequest != null) {
                 request = savedUserRequest;
             } else {
-                request = engine.getProgramRequest(unikoItem.getName());
+                request = wordsWorker.generateSearchQuery(unikoItem.getName());
             }
 
-            list = engine.getPriceListForStringCustom(request);
+            list = priceItemService.getPriceListForString(request);
 
         } else {                                        // - manual request
             if (StringUtils.isBlank(user_request)) {    // - if manual request is empty
                 list = new ArrayList<>();
             } else {                                    // - correct manual request
-                list = engine.getPriceListForStringCustom(user_request);
+                list = priceItemService.getPriceListForString(user_request);
                 if (list.size() > 0) {
                     userRequestService.saveOrUpdate(new UserRequest(unikoItem.getOrderGroup(), user_request));
                 }
